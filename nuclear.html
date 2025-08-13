@@ -5,10 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>核三延役公投通過／不通過後的處置流程</title>
 <style>
-  
-  
-  
-  :root {
+:root {
     --primary-color: #2c3e50;
     --secondary-color: #f5f5f5;
     --accent-color: #3498db;
@@ -16,202 +13,242 @@
     --background-color: #ffffff;
     --card-background: #f9f9f9;
     --highlight-color: #f39c12;
-  }
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
+}
+* {
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
     font-family: 'Noto Sans TC', sans-serif, 'Microsoft JhengHei', '微軟正黑體';
-  }
-  body {
+}
+body {
     background: var(--background-color);
     color: var(--text-color);
     padding: 20px;
-  }
-  h1 {
+}
+h1 {
+    font-size: 2.5rem;
     text-align: center;
     color: var(--highlight-color);
     margin-bottom: 10px;
-  }
-  .container {
+}
+.container {
     max-width: 1200px;
     margin: 0 auto;
-  }
-  .subtitle {
+}
+.subtitle {
+    font-size: 1.2rem;
     text-align: center;
     margin-bottom: 40px;
     opacity: 0.8;
-  }
-  
-  /* 加入浮動效果 */
-.timeline-item {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.timeline-item:hover {
-  transform: translateY(-8px); /* 向上浮動 8px，可調整 */
-  box-shadow: 0 15px 25px rgba(0,0,0,0.2); /* 增強陰影效果 */
+/* -------------------------------
+   浮動效果 hover
+--------------------------------*/
+.timeline-item h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-  
-  
-  .timeline-wrapper {
+.timeline-item p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.timeline-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+}
+
+/* -------------------------------
+   雙欄時間軸主容器
+--------------------------------*/
+.timeline-wrapper {
     display: flex;
     justify-content: space-between;
     max-width: 1200px;
     margin: 0 auto;
-  }
-  /* 左右欄各自寬度 */
-  .timeline-column {
+}
+.timeline-column {
     width: 45%;
-    position: relative; /* 讓時間線能定位 */
-  }
-  /* 左邊時間線 */
-  .left::before {
+    position: relative;
+}
+
+/* 左右欄時間線 */
+.left::before {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    right: -10px; /* 靠右 */
+    right: -10px;
     width: 4px;
     background: var(--accent-color);
     border-radius: 2px;
     z-index:1;
-  }
-  /* 右邊時間線 */
-  .right::before {
+}
+.right::before {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -10px; /* 靠左 */
+    left: -10px;
     width: 4px;
     background: var(--accent-color);
     border-radius: 2px;
     z-index:1;
-  }
-  /* 每個時間軸項目 */
-  .timeline-item {
+}
+
+/* -------------------------------
+   每個時間軸項目卡片樣式
+--------------------------------*/
+.timeline-item {
     background: var(--card-background);
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     padding: 20px;
     margin-bottom: 40px;
     position: relative;
-  }
-  /* 左欄圓點 */
-  .left .timeline-item::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    right: -18px; /* 對齊左欄線 */
-    width: 20px;
-    height: 20px;
-    background: var(--background-color);
-    border: 4px solid black;
-    border-radius: 50%;
-    box-sizing: border-box;
-  }
-  /* 右欄圓點 */
-  .right .timeline-item::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: -18px; /* 對齊右欄線 */
-    width: 20px;
-    height: 20px;
-    background: var(--background-color);
-    border: 4px solid black;
-    border-radius: 50%;
-    box-sizing: border-box;
-  }
-  /* 標題顏色差異 */
-  .left .timeline-item h2 {
-    color: #33A8FF; /* 藍色-通過後 */
-  }
-  .right .timeline-item h2 {
-    color: #FF6B6B; /* 淺紅色 */
-  }
+}
 
-  /* 手機版（保留雙線） */
-  @media screen and (max-width: 768px) {
+/* 左欄圓點 */
+.left .timeline-item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    width: 20px;
+    height: 20px;
+    background: var(--background-color);
+    border: 4px solid black;
+    border-radius: 50%;
+    box-sizing: border-box;
+    transform: translateY(-50%);
+}
+
+/* 右欄圓點 */
+.right .timeline-item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -18px;
+    width: 20px;
+    height: 20px;
+    background: var(--background-color);
+    border: 4px solid black;
+    border-radius: 50%;
+    box-sizing: border-box;
+    transform: translateY(-50%);
+}
+
+/* 標題顏色差異 */
+.left .timeline-item h2 {
+    color: #33A8FF; /* 藍色-通過後 */
+}
+.right .timeline-item h2 {
+    color: #FF6B6B; /* 淺紅色-不通過 */
+}
+
+  /* 調整核電廠檢測細項列表往左 */
+.timeline-item ul {
+    padding-left: 20px; /* 原本預設可能是40px，可依需求調整 */
+    margin-left: 0;     /* 移除多餘 margin */
+}
+  
+/* -------------------------------
+   手機版響應式
+--------------------------------*/
+@media screen and (max-width: 768px) {
     .timeline-wrapper {
-      flex-direction: column;
-      gap: 40px;
+        flex-direction: column;
+        gap: 40px;
     }
     .timeline-column {
-      width: 100%;
+        width: 100%;
     }
-    /* 左線改到左邊 */
     .left::before {
-      right: auto;
-      left: 10px;
+        right: auto;
+        left: 10px;
     }
-    /* 左欄圓點改到線的右邊 */
     .left .timeline-item::after {
-      right: auto;
-      left: -18px;
+        right: auto;
+        left: -18px;
     }
-  }
+}
 </style>
-
 </head>
 <body>
 <div class="container">
-  <h1>核三延役公投通過／不通過後的處置流程</h1>
-  <p class="subtitle"></p>
-  
-  <div class="timeline-wrapper">
-    <div class="timeline-column left">
-      <h2 style="text-align: center;">公投通過</h2><br>
-      <div class="timeline-item">
-        <h2>第一階段：《核管法》子法修法</h2>
-        <p>《核管法》子法納入重啟所需的檢測與條件，確保核電廠運轉安全。</p>
-      </div>
-      <div class="timeline-item">
-        <h2>第二階段：立法程序</h2>
-        <p></p>
-      </div>
-      <div class="timeline-item">
-        <h2>第三階段：核電廠檢測</h2>
-        <p>台電依據法規對欲延役的核電廠進行檢測。</p><br>
-        
-        <div>
-          <li><b>安全總體檢：</b> 對核電廠的重要設備及結構物件進行通盤性的盤點與檢視。</li><br>
-          <li><b>設備壽期管理與更新： </b>評估設備的剩餘壽命，並對需要汰換更新的設備進行採購與更換。</li><br>
-          <li><b>安全強化與耐震評估：</b> 針對福島核災等經驗進行安全強化評估，並重新評估及補強耐震能力。</li><br>
+    <h1>核三延役公投通過／不通過後的處置流程</h1>
+    <p class="subtitle"></p>
+
+    <div class="timeline-wrapper">
+
+        <!-- 左欄：公投通過 -->
+        <div class="timeline-column left">
+            <h2 style="text-align: center;">公投通過</h2><br>
+
+            <!-- 第一階段 -->
+            <div class="timeline-item">
+                <h2>第一階段：《核管法》子法修法</h2>
+                <p>《核管法》子法納入重啟所需的檢測與條件，確保核電廠運轉安全。</p>
+            </div>
+
+            <!-- 第二階段 -->
+            <div class="timeline-item">
+                <h2>第二階段：立法程序</h2>
+                <p></p>
+            </div>
+
+            <!-- 第三階段 -->
+            <div class="timeline-item">
+                <h2>第三階段：核電廠檢測</h2>
+                <p>台電依據法規對欲延役的核電廠進行檢測。</p>
+                <!-- 安全檢查細項 -->
+                <ul>
+                    <li><b>安全總體檢：</b> 對核電廠的重要設備及結構物件進行通盤性的盤點與檢視。</li>
+                    <li><b>設備壽期管理與更新：</b> 評估設備的剩餘壽命，並對需要汰換更新的設備進行採購與更換。</li>
+                    <li><b>安全強化與耐震評估：</b> 針對福島核災等經驗進行安全強化評估，並重新評估及補強耐震能力。</li>
+                </ul>
+            </div>
+
+            <!-- 第四階段 -->
+            <div class="timeline-item">
+                <h2>第四階段：國際同儕審查與監管單位核安審查</h2>
+                <p>延役計畫需經過國際專家的同儕審查，並由核能安全主管機關核安會進行嚴格審查，並依審查意見進行改善。</p>
+            </div>
+
+            <!-- 第五階段 -->
+            <div class="timeline-item">
+                <h2>第五階段：最終判定</h2>
+                <p>經審查後決定核電廠是否可重啟。</p>
+            </div>
         </div>
-        
-      </div>
-        <div class="timeline-item">
-        <h2>第四階段：國際同儕審查與監管單位核安審查</h2>
-        <p>延役計畫需經過國際專家的同儕審查，並由核能安全主管機關核安會進行嚴格審查，並依審查意見進行改善。</p>
-      </div>
-      <div class="timeline-item">
-        <h2>第五階段：最終判定</h2>
-        <p>經審查後決定核電廠是否可重啟。</p>
-      </div>
+
+        <!-- 右欄：公投不通過 -->
+        <div class="timeline-column right">
+            <h2 style="text-align: center;">公投不通過</h2><br>
+
+            <!-- 第一階段 -->
+            <div class="timeline-item">
+                <h2>第一階段：除役過渡期</h2>
+                <p>進行廠內設備清理，並尋址興建乾式貯存設施，移出冷卻燃料棒。</p>
+            </div>
+
+            <!-- 第二階段 -->
+            <div class="timeline-item">
+                <h2>第二階段：拆除階段</h2>
+                <p>拆除反應爐及廠房組件，保守估計需要較長時間。</p>
+            </div>
+
+            <!-- 第三階段 -->
+            <div class="timeline-item">
+                <h2>第三階段：土地復原與輻射偵測</h2>
+                <p>進行土地復原與殘餘輻射偵測，至少需5年才能達到標準。</p>
+            </div>
+
+        </div>
     </div>
-
-    <div class="timeline-line"></div>
-
-    <div class="timeline-column right">
-      <h2 style="text-align: center;">公投不通過</h2><br>
-      <div class="timeline-item">
-        <h2>第一階段：除役過渡期</h2>
-        <p>進行廠內設備清理，興建乾式貯存設施，移出冷卻燃料棒。</p>
-      </div>
-      <div class="timeline-item">
-        <h2>第二階段：拆除階段</h2>
-        <p>拆除反應爐及廠房組件，預估時間較長。</p>
-      </div>
-      <div class="timeline-item">
-        <h2>第三階段：土地復原與輻射偵測</h2>
-        <p>進行土地復原與殘餘輻射偵測，至少需5年才能達標。</p>
-      </div>
-      <div class="timeline-item">
-        <h2>第四階段：最終判定</h2>
-        <p>根據檢測結果決定是否允許未來重啟。</p>
-      </div>
-    
-
-
+</div>
 </body>
 </html>
