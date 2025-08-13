@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -172,11 +171,18 @@
       </div>
       <div class="timeline-item">
         <h2>第三階段：核電廠檢測</h2>
-        <p>台電依據法規對欲延役的核電廠進行檢測。</p>
+        <p>台電依據法規對欲延役的核電廠進行檢測。</p><br>
+        
+        <div>
+          <li><b>安全總體檢：</b> 對核電廠的重要設備及結構物件進行通盤性的盤點與檢視。</li><br>
+          <li><b>設備壽期管理與更新： </b>評估設備的剩餘壽命，並對需要汰換更新的設備進行採購與更換。</li><br>
+          <li><b>安全強化與耐震評估：</b> 針對福島核災等經驗進行安全強化評估，並重新評估及補強耐震能力。</li><br>
+        </div>
+        
       </div>
         <div class="timeline-item">
-        <h2>第四階段：核安會審查</h2>
-        <p>核電廠檢測結果送交核安會審查。</p>
+        <h2>第四階段：國際同儕審查與監管單位核安審查</h2>
+        <p>延役計畫需經過國際專家的同儕審查，並由核能安全主管機關核安會進行嚴格審查，並依審查意見進行改善。</p>
       </div>
       <div class="timeline-item">
         <h2>第五階段：最終判定</h2>
@@ -205,94 +211,7 @@
         <p>根據檢測結果決定是否允許未來重啟。</p>
       </div>
     
- <script>
-        // 等待頁面載入完成
-        document.addEventListener('DOMContentLoaded', function() {
-            // 啟動數字動畫
-            setTimeout(() => {
-                animateNumbers();
-            }, 500);
-            
-            // 監聽滾動事件，顯示時間軸項目
-            window.addEventListener('scroll', revealTimelineItems);
-            // 初始檢查是否有可見的時間軸項目
-            revealTimelineItems();
-            
-            // 如果在iframe中，發送高度訊息給父頁面
-            if (window.self !== window.top) {
-                // 定期發送高度訊息，確保動畫完成後高度正確
-                setInterval(function() {
-                    const height = document.body.scrollHeight;
-                    window.parent.postMessage({ type: 'resize', height: height }, '*');
-                }, 500);
-            }
-        });
-        
-        // 數字動畫函數
-        function animateNumbers() {
-            const numberElements = document.querySelectorAll('.number');
-            
-            numberElements.forEach(numberElement => {
-                const target = parseInt(numberElement.getAttribute('data-target'));
-                const duration = 2000; // 動畫持續時間（毫秒）
-                const frameDuration = 1000 / 60; // 每幀持續時間（60fps）
-                const totalFrames = Math.round(duration / frameDuration);
-                
-                let frame = 0;
-                let currentNumber = 0;
-                
-                // 根據數字大小調整增量
-                const increment = target > 1000 ? target / 100 : target / 50;
-                
-                // 使用 requestAnimationFrame 實現平滑動畫
-                const counter = setInterval(() => {
-                    frame++;
-                    
-                    // 使用緩動函數使動畫更自然
-                    const progress = frame / totalFrames;
-                    const easedProgress = easeOutQuart(progress);
-                    
-                    currentNumber = Math.round(easedProgress * target);
-                    
-                    // 更新數字顯示
-                    if (target >= 1000) {
-                        // 大數字使用千分位分隔
-                        numberElement.textContent = currentNumber.toLocaleString('zh-TW');
-                    } else {
-                        numberElement.textContent = currentNumber;
-                    }
-                    
-                    // 動畫結束
-                    if (frame === totalFrames) {
-                        clearInterval(counter);
-                        numberElement.textContent = target >= 1000 ? target.toLocaleString('zh-TW') : target;
-                    }
-                }, frameDuration);
-            });
-        }
-        
-        // 緩動函數 - 快速開始，慢速結束
-        function easeOutQuart(x) {
-            return 1 - Math.pow(1 - x, 4);
-        }
-        
-        // 顯示時間軸項目
-        function revealTimelineItems() {
-            const timelineItems = document.querySelectorAll('.timeline-item');
-            
-            timelineItems.forEach(item => {
-                const itemTop = item.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                // 當項目進入視窗時顯示
-                if (itemTop < windowHeight * 0.85) {
-                    item.classList.add('visible');
-                }
-            });
-        }
-    </script>
+
 
 </body>
 </html>
-
-
