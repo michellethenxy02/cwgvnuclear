@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>台灣地圖｜同意/不同意 互動統計</title>
+  <!-- D3 & TopoJSON CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121833;
+      --accent: #4cc9f0;
+      --agree: #52b788;
+      --disagree: #ef476f;
+      --text: #e6e9f0;
+      --muted: #9aa3b2;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 70% -10%, #1c2650 0%, #0b1020 60%);
+      color: var(--text);
+    }
+    .wrap { max-width: 1200px; margin: 24px auto; padding: 16px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom: 12px; }
+    h1 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: .5px; }
+    .controls { display:flex; gap: 8px; align-items:center; flex-wrap: wrap; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 12px 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .map-row { display:grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+    @media (max-width: 980px){ .map-row { grid-template-columns: 1fr; } }
+
+    .map-card { position: relative; }
+    #map { width: 100%; height: 70vh; min-height: 520px; display:block; }
+    .region { cursor: pointer; stroke: rgba(255,255,255,.65); stroke-width: .6; vector-effect: non-scaling-stroke; }
+    .region:hover { filter: brightness(1.1); }
+    .region.selected { stroke-width: 1.5; stroke: var(--accent); }
+
+    .tooltip { position: fixed; pointer-events: none; z-index: 50; transform: translate(12px, 12px); }
+    .tooltip .inner { background: var(--panel); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 10px 12px; min-width: 220px; box-shadow: 0 8px 28px rgba(0,0,0,.35); }
+    .tooltip h3 { margin: 0 0 8px; font-size: 14px; letter-spacing: .4px; }
+    .tooltip .row { display:flex; align-items:center; justify-content:space-between; margin: 4px 0; font-size: 13px; }
+    .pill { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .pill.agree { background: rgba(82,183,136,.15); color: var(--agree); border: 1px solid rgba(82,183,136,.35); }
+    .pill.disagree { background: rgba(239,71,111,.12); color: var(--disagree); border: 1px solid rgba(239,71,111,.32); }
+    .legend { display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+    .legend-item { text-align:center; font-size: 12px; color: var(--muted); }
+
+    .side { display:grid; gap: 12px; align-content:start; }
+    .summary { display:grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.08); padding: 12px; border-radius: 14px; min-height: 84px; }
+    .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .stat .val { font-size: 20px; font-weight: 800; letter-spacing: .3px; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    .search { display:flex; gap:8px; }
+    .search input { flex:1; background: #0d1329; border: 1px solid rgba(255,255,255,.12); color: var(--text); padding: 10px 12px; border-radius: 12px; }
+    .search button { background: var(--accent); color: #061224; border: none; padding: 10px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    .search button:hover { filter: brightness(1.05); }
+    .reset { background: transparent; color: var(--accent); border: 1px dashed rgba(76,201,240,.5); padding: 8px 10px; border-radius: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>台灣地圖｜同意 / 不同意（滑鼠移過縣市顯示）</h1>
+      <div class="controls">
+        <button class="reset" id="resetBtn">重置選取</button>
+      </div>
+    </header>
+
+    <div class="map-row">
+      <div class="card map-card">
+        <svg id="map" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="tooltip" id="tooltip" style="opacity: 0;">
+          <div class="inner">
+            <h3 id="tt-title">—</h3>
+            <div class="row"><span>同意票</span><span class="pill agree" id="tt-agree">—</span></div>
+            <div class="row"><span>不同意票</span><span class="pill disagree" id="tt-disagree">—</span></div>
+            <div class="row"><span>同意占比</span><span id="tt-rate">—</span></div>
+            <div class="row"><span>差額（同意−不同意）</span><span id="tt-gap">—</span></div>
+            <div class="legend" id="legend"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="card">
+          <div class="search">
+            <input id="searchInput" placeholder="輸入縣市名稱（例：臺北市/台北市）" />
+            <button id="searchBtn">搜尋</button>
+          </div>
+          <p class="note" style="margin-top:8px;">提示：支援「臺/台」同形字，點擊地圖也可固定選取；再次點擊取消。</p>
+        </div>
+
+        <div class="summary">
+          <div class="stat">
+            <div class="label">全台同意票</div>
+            <div class="val" id="sumAgree">—</div>
+            <div class="muted" id="sumAgreeRate"></div>
+          </div>
+          <div class="stat">
+            <div class="label">全台不同意票</div>
+            <div class="val" id="sumDisagree">—</div>
+            <div class="muted" id="sumDisagreeRate"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label muted" style="margin-bottom:6px;">著色依據</div>
+          <div class="note">顏色由「同意占比」計算：同意越高越偏綠；不同意越高越偏紅。滑過縣市顯示詳細數字。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============ 1) 設定：縣市資料（請依實際結果更新） ============
+    // key 可用「臺北市」或「台北市」；程式會自動對應
+    const votes = {
+      "基隆市": { agree: 120000, disagree: 110000 },
+      "臺北市": { agree: 930000, disagree: 80000 },
+      "新北市": { agree: 1450000, disagree: 1500000 },
+      "桃園市": { agree: 650000, disagree: 600000 },
+      "新竹市": { agree: 150000, disagree: 140000 },
+      "新竹縣": { agree: 210000, disagree: 180000 },
+      "苗栗縣": { agree: 220000, disagree: 210000 },
+      "臺中市": { agree: 95000000, disagree: 920000 },
+      "彰化縣": { agree: 430000, disagree: 470000 },
+      "南投縣": { agree: 170000, disagree: 180000 },
+      "雲林縣": { agree: 210000, disagree: 240000 },
+      "嘉義市": { agree: 130000, disagree: 120000 },
+      "嘉義縣": { agree: 180000, disagree: 20000000 },
+      "臺南市": { agree: 670000, disagree: 720000 },
+      "高雄市": { agree: 1070000, disagree: 1150000 },
+      "屏東縣": { agree: 330000, disagree: 370000 },
+      "宜蘭縣": { agree: 200000, disagree: 210000 },
+      "花蓮縣": { agree: 150000, disagree: 160000 },
+      "臺東縣": { agree: 110000, disagree: 120000 },
+      "澎湖縣": { agree: 38000, disagree: 42000 },
+      "金門縣": { agree: 52000, disagree: 48000 },
+      "連江縣": { agree: 8000, disagree: 9000 }
+    };
+
+    // 正規化「臺/台」用字，並處理部分別名
+    const normalizeName = (name) => {
+      if (!name) return name;
+      const n = name.replace(/台/g, '臺');
+      const map = { '台中市': '臺中市', '台南市': '臺南市', '台東縣': '臺東縣', '台北市': '臺北市' };
+      return map[n] || n;
+    };
+
+    // ============ 2) 地圖來源（多個候選連結，任一成功即可） ============
+    const GEO_CANDIDATES = [
+      // g0v：縣市（常用）
+      'https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty2010.geo.json',
+      // deldersveld：TopoJSON 版本
+      'https://raw.githubusercontent.com/deldersveld/topojson/master/countries/taiwan/taiwan-counties.json',
+      // click_that_hood：GeoJSON 備援
+      'https://raw.githubusercontent.com/codeforgermany/click_that_hood/master/public/data/taiwan.geojson'
+    ];
+
+    const svg = d3.select('#map');
+    const g = svg.append('g');
+    const tooltip = d3.select('#tooltip');
+
+    const width = 800, height = 1000; // 與 viewBox 一致
+
+    function asGeoJSON(data){
+      // 若是 TopoJSON
+      if (data && data.type === 'Topology') {
+        // 嘗試常見的物件鍵名
+        const keys = Object.keys(data.objects);
+        const first = data.objects[keys[0]];
+        return topojson.feature(data, first);
+      }
+      // 已是 GeoJSON
+      return data;
+    }
+
+    async function fetchFirstWorking(urls){
+      for (const u of urls){
+        try {
+          const res = await fetch(u);
+          if (!res.ok) continue;
+          const json = await res.json();
+          const gj = asGeoJSON(json);
+          if (gj && gj.features && gj.features.length) return gj;
+        } catch(e){ /* try next */ }
+      }
+      throw new Error('無法載入任何地圖來源，請檢查網路或更換 GEO_CANDIDATES。');
+    }
+
+    function getName(props){
+      return props.COUNTYNAME || props.name || props.County || props.City || props.C_Name || props.TOWNNAME || '—';
+    }
+
+    function agreeRate(v){
+      const total = (v?.agree||0) + (v?.disagree||0);
+      return total ? (v.agree/total) : 0.5;
+    }
+
+    // 以同意占比 0→紅、0.5→灰、1→綠 的簡易 HSL 漸層
+    function rateToColor(rate){
+      // 將 0~1 映射到紅(0deg)→綠(120deg)
+      const hue = 120 * rate; // 0=紅, 120=綠
+      const sat = 65; // %
+      const light = 50; // %
+      return `hsl(${hue} ${sat}% ${light}%)`;
+    }
+
+    function numberFormat(n){
+      return (n ?? 0).toLocaleString('zh-Hant-TW');
+    }
+
+    function updateSummary(){
+      let A=0, D=0;
+      Object.values(votes).forEach(v=>{ A += v.agree||0; D += v.disagree||0; });
+      const T = A + D;
+      d3.select('#sumAgree').text(numberFormat(A));
+      d3.select('#sumDisagree').text(numberFormat(D));
+      d3.select('#sumAgreeRate').text(T? `占比 ${(A/T*100).toFixed(2)}%` : '—');
+      d3.select('#sumDisagreeRate').text(T? `占比 ${(D/T*100).toFixed(2)}%` : '—');
+    }
+
+    function buildLegend(){
+      const legend = d3.select('#legend');
+      legend.selectAll('*').remove();
+      const steps = 5;
+      for (let i=0;i<steps;i++){
+        const r = i/(steps-1);
+        const el = legend.append('div').attr('class','legend-item');
+        el.append('div')
+          .style('height','10px')
+          .style('border-radius','6px')
+          .style('border','1px solid rgba(255,255,255,.25)')
+          .style('background', rateToColor(r));
+        el.append('div').text(`${Math.round(r*100)}%`);
+      }
+    }
+
+    function showTooltip(x, y, name, v){
+      const A = v?.agree||0, D = v?.disagree||0, T = A + D;
+      tooltip.style('opacity', 1)
+        .style('left', x + 'px')
+        .style('top', y + 'px');
+      d3.select('#tt-title').text(name);
+      d3.select('#tt-agree').text(numberFormat(A));
+      d3.select('#tt-disagree').text(numberFormat(D));
+      d3.select('#tt-rate').text(T? (A/T*100).toFixed(2) + '%' : '—');
+      d3.select('#tt-gap').text(numberFormat(A - D));
+    }
+
+    function hideTooltip(){ tooltip.style('opacity', 0); }
+
+    function centerAndFit(features){
+      const projection = d3.geoMercator().center([121, 24]).scale(1).translate([0,0]);
+      const path = d3.geoPath(projection);
+      const b = d3.geoBounds({ type:'FeatureCollection', features });
+      // fit to viewBox with padding
+      const padding = 20;
+      const topLeft = projection(b[0]);
+      const bottomRight = projection(b[1]);
+      const s = Math.min(
+        (width - 2*padding) / Math.abs(bottomRight[0] - topLeft[0]),
+        (height - 2*padding) / Math.abs(bottomRight[1] - topLeft[1])
+      );
+      const t = [width/2, height/2];
+      projection
+        .scale(s)
+        .translate(t);
+      return { projection, path: d3.geoPath(projection) };
+    }
+
+    function selectRegion(el){
+      const was = el.classList.contains('selected');
+      d3.selectAll('.region').classed('selected', false);
+      if (!was) el.classList.add('selected');
+    }
+
+    function findFeatureByName(features, query){
+      if (!query) return null;
+      const n = normalizeName(query.trim());
+      return features.find(f => normalizeName(getName(f.properties)) === n) || null;
+    }
+
+    (async function init(){
+      updateSummary();
+      buildLegend();
+
+      const geo = await fetchFirstWorking(GEO_CANDIDATES);
+      const features = geo.features;
+
+      const { path } = centerAndFit(features);
+
+      g.selectAll('path')
+        .data(features)
+        .join('path')
+        .attr('class','region')
+        .attr('d', path)
+        .attr('fill', d => {
+          const name = normalizeName(getName(d.properties));
+          const v = votes[name] || votes[name?.replace('臺','台')] || { agree:0, disagree:0 };
+          return rateToColor(agreeRate(v));
+        })
+        .on('mousemove', (event, d) => {
+          const name = normalizeName(getName(d.properties));
+          const v = votes[name] || votes[name?.replace('臺','台')] || { agree:0, disagree:0 };
+          const [x,y] = [event.clientX, event.clientY];
+          showTooltip(x, y, name, v);
+        })
+        .on('mouseleave', hideTooltip)
+        .on('click', function(event, d){
+          selectRegion(this);
+        })
+        .append('title') // 螢幕報讀/備援
+        .text(d=>normalizeName(getName(d.properties)));
+
+      // 搜尋功能
+      const input = document.getElementById('searchInput');
+      document.getElementById('searchBtn').addEventListener('click', () => {
+        const f = findFeatureByName(features, input.value);
+        if (!f) return;
+        d3.selectAll('.region')
+          .classed('selected', d => d === f);
+      });
+
+      // 重置按鈕
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        d3.selectAll('.region').classed('selected', false);
+        hideTooltip();
+      });
+
+      // 視窗大小調整：維持 SVG 比例（viewBox 已處理，自適應寬度）
+      window.addEventListener('resize', () => { /* 無需額外處理 */ });
+    })().catch(err => {
+      console.error(err);
+      alert('地圖載入失敗：' + err.message);
+    });
+  </script>
+</body>
+</html>
