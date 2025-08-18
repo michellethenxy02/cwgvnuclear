@@ -1,35 +1,41 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>核三延役公投通過／不通過後的處置流程</title>
+<html lang="zh-TW"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>核三延役公投後續流程</title>
 <style>
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #f5f5f5;
+    --primary-text-color: #2c3e50; /* 主標題文字色 (深藍灰) */
+    --subtitle-text-color: #7f8c8d; /* 副標題文字色 (淺灰) */
     --accent-color: #3498db;
-    --text-color: #333333;
-    --background-color: #ffffff;
-    --card-background: #f9f9f9;
+    --background-color: #f2f2f2;   /* 網頁整體底色 (灰白) */
+    --card-background: #ffffff;      /* 卡片背景色 (白) */
+    --timeline-line-color: #bdc3c7;  /* 時間軸線條顏色 (灰色) */
+    --pass-color: #3498db;           /* 通過/強調色 (亮藍) */
+    --fail-color: #F7931D;           /* 不通過/強調色 (橘色) */
+    --body-text-color: #333333;      /* 內文顏色 (黑色) */
     --highlight-color: #f39c12;
+    --highlight-color2:#3498db;
 }
 * {
-    margin: 0; 
-    padding: 0; 
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: 'Noto Sans TC', sans-serif, 'Microsoft JhengHei', '微軟正黑體';
+    font-family: Arial, 'Microsoft JhengHei', '微軟正黑體', 'Noto Sans TC', sans-serif;
 }
 body {
     background: var(--background-color);
-    color: var(--text-color);
+    color: var(--primary-text-color);
     padding: 20px;
 }
 h1 {
-    font-size: 2.5rem;
+    font-size: 30px;
     text-align: center;
-    color: var(--highlight-color);
+    color: var(--primary-text-color);
     margin-bottom: 10px;
+}
+.highlight-color2{
+  color: #3498db;        /* 字體顏色 */
+  background-color: #eaf4fc; /* 背景色 (淺藍色) */   
 }
 .container {
     max-width: 1200px;
@@ -38,27 +44,48 @@ h1 {
 .subtitle {
     font-size: 1.2rem;
     text-align: center;
-    margin-bottom: 40px;
-    opacity: 0.8;
+    margin-bottom: 15px;
+    color: var(--subtitle-text-color);
 }
 
 /* -------------------------------
    浮動效果 hover
 --------------------------------*/
-.timeline-item h2 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
+.timeline-item {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.timeline-item h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
 .timeline-item p {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
+    font-size: 14px;
     line-height: 1.6;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 0;
+    color: var(--body-text-color);
 }
 .timeline-item:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+}
+  
+.timeline-item3 {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.timeline-item3 h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #3498db
+}
+.timeline-item3 p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 0;
+    color: var(--body-text-color);
+}
+.timeline-item3:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
 }
 
 /* -------------------------------
@@ -71,19 +98,61 @@ h1 {
     margin: 0 auto;
 }
 .timeline-column {
-    width: 45%;
+    width: 46%;
     position: relative;
 }
+.timeline-column > h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
 
+.number-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            height: 100px;
+        }
+  
+.number-container2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            height: 100px;
+        }
+        
+.number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--highlight-color);
+            text-align: center;
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+.number2{
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--highlight-color2);
+            text-align: center;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+  }
+        
+.unit {
+            font-size: 1.8rem;
+            margin-left: 5px;
+        }
+  
+  
 /* 左右欄時間線 */
 .left::before {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
-    right: -10px;
+    right: -22px;
     width: 4px;
-    background: var(--accent-color);
+    background: var(--timeline-line-color);
     border-radius: 2px;
     z-index:1;
 }
@@ -92,9 +161,9 @@ h1 {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -10px;
+    left: -22px;
     width: 4px;
-    background: var(--accent-color);
+    background: var(--timeline-line-color);
     border-radius: 2px;
     z-index:1;
 }
@@ -104,148 +173,340 @@ h1 {
 --------------------------------*/
 .timeline-item {
     background: var(--card-background);
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    padding: 20px;
-    margin-bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 12px 18px;
+    margin-bottom: 15px;
     position: relative;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
 }
+  
+.timeline-item2 {
+    background: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    position: relative;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+} 
 
-/* 左欄圓點 */
+.timeline-item3 {
+    background: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    position: relative;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+} 
+
+/* 左欄圓點（桌機版顯示） */
 .left .timeline-item::after {
     content: '';
     position: absolute;
     top: 50%;
-    right: -18px;
+    right: -30px;
     width: 20px;
     height: 20px;
     background: var(--background-color);
-    border: 4px solid black;
+    border: 4px solid var(--pass-color);
     border-radius: 50%;
     box-sizing: border-box;
     transform: translateY(-50%);
+    z-index: 2;
 }
 
-/* 右欄圓點 */
+
+  
+.left .timeline-item3::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -48px;
+    width: 20px;
+    height: 20px;
+    background: var(--background-color);
+    border: 4px solid var(--pass-color);
+    border-radius: 50%;
+    box-sizing: border-box;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+/* 右欄圓點（桌機版顯示） */
 .right .timeline-item::after {
     content: '';
     position: absolute;
     top: 50%;
-    left: -18px;
+    left: -30px;
     width: 20px;
     height: 20px;
     background: var(--background-color);
-    border: 4px solid black;
+    border: 4px solid var(--fail-color);
     border-radius: 50%;
     box-sizing: border-box;
     transform: translateY(-50%);
+    z-index: 2;
 }
 
-/* 標題顏色差異 */
+/* 僅針對標題設定顏色 */
+.left > h2,
 .left .timeline-item h2 {
-    color: #33A8FF; /* 藍色-通過後 */
+    color: var(--pass-color);
 }
+.right > h2,
 .right .timeline-item h2 {
-    color: #FF6B6B; /* 淺紅色-不通過 */
+    color: var(--fail-color);
 }
 
-  /* 調整核電廠檢測細項列表往左 */
 .timeline-item ul {
-    padding-left: 20px; /* 原本預設可能是40px，可依需求調整 */
-    margin-left: 0;     /* 移除多餘 margin */
+    padding-left: 20px;
+    margin-left: 0;
 }
-  
+
+.mobile-swipe-indicator {
+    display: none;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.timeline-column .timeline-item:nth-of-type(1) { animation-delay: 0.2s; }
+.timeline-column .timeline-item:nth-of-type(2) { animation-delay: 0.4s; }
+.timeline-column .timeline-item:nth-of-type(3) { animation-delay: 0.6s; }
+.timeline-column .timeline-item:nth-of-type(4) { animation-delay: 0.8s; }
+.timeline-column .timeline-item:nth-of-type(5) { animation-delay: 1.0s; }
+
 /* -------------------------------
-   手機版響應式
+   手機版響應式 (RWD)
+   👉 這裡關閉圓點與中線
 --------------------------------*/
 @media screen and (max-width: 768px) {
     .timeline-wrapper {
-        flex-direction: column;
-        gap: 40px;
+        overflow-x: auto;
+        gap: 25px;
+        padding: 0 15px 15px 15px;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
     }
+    
+    .timeline-wrapper::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+
+    /* 移除左右時間線 */
+    .left::before,
+    .right::before,
+    .timeline-column::before {
+       content: none !important;
+    }
+
+    /* 移除所有圓點（藍點／橘點） */
+    .left .timeline-item::after,
+    .right .timeline-item::after,
+    .left .timeline-item3::after,
+    .timeline-item::after {
+        content: none !important;
+        border: none !important;
+    }
+
     .timeline-column {
-        width: 100%;
+        width: 85vw;
+        flex-shrink: 0;
+        margin-bottom: 0;
     }
-    .left::before {
-        right: auto;
-        left: 10px;
+
+    .timeline-item {
+        margin-left: 0;
+        margin-right: 0;
     }
-    .left .timeline-item::after {
-        right: auto;
-        left: -18px;
+
+    .mobile-swipe-indicator {
+        display: block;
+        text-align: center;
+        margin-bottom: 30px;
+        color: var(--subtitle-text-color);
+        font-size: 14px;
     }
 }
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>核三延役公投通過／不通過後的處置流程</h1>
-    <p class="subtitle"></p>
+    <h1>核三延役公投後續流程</h1>
+    <p class="subtitle">比較通過／不通過後的後續處理步驟</p>
+    <p class="mobile-swipe-indicator">請左右滑動查看</p>
 
     <div class="timeline-wrapper">
-
         <!-- 左欄：公投通過 -->
         <div class="timeline-column left">
-            <h2 style="text-align: center;">公投通過</h2><br>
+            <h2>公投通過</h2>
 
-            <!-- 第一階段 -->
             <div class="timeline-item">
                 <h2>第一階段：《核管法》子法修法</h2>
                 <p>《核管法》子法納入重啟所需的檢測與條件，確保核電廠運轉安全。</p>
+              
             </div>
 
-            <!-- 第二階段 -->
             <div class="timeline-item">
                 <h2>第二階段：立法程序</h2>
-                <p></p>
+                <p>完成相關法案的立法程序，為延役提供法律依據。</p>
+                <div class="number-container2">
+                        <div class="number2" id="number-2" data-target="4">4</div>
+                        <div class="unit">個月</div>
+                 </div>  
             </div>
-
-            <!-- 第三階段 -->
-            <div class="timeline-item">
+            
+            <div class="timeline-item2">
+               <div class="timeline-item3">
                 <h2>第三階段：核電廠檢測</h2>
-                <p>台電依據法規對欲延役的核電廠進行檢測。</p>
+                <p>台電依據新法規對欲延役的核電廠進行全面性的安全檢測與評估。</p>
             </div>
 
-            <!-- 第四階段 -->
-            <div class="timeline-item">
+            <div class="timeline-item3">
                 <h2>第四階段：核安會審查</h2>
-                <p>核能安全主管機關核安會進行審查。</p>
+                <p>核能安全主管機關核安會對台電提交的檢測報告與延役計畫進行嚴格審查。</p>
             </div>
 
-            <!-- 第五階段 -->
-            <div class="timeline-item">
+            <div class="timeline-item3">
                 <h2>第五階段：最終判定</h2>
-                <p>經審查後決定核電廠是否可重啟。</p>
+                <p>經審查通過後，核安會將發放新的運轉執照，核電廠方可正式延役重啟。</p>
             </div>
+              
+<div class="number-container2">
+    <div class="number2" data-target="2">0</div><h2>~</h2>
+    <div class="number2" data-target="5">0</div>
+    <div class="unit">年以上</div>
+  
+</div>   
+            </div>
+            
         </div>
 
         <!-- 右欄：公投不通過 -->
         <div class="timeline-column right">
-            <h2 style="text-align: center;">公投不通過</h2><br>
+            <h2>公投不通過</h2>
 
-            <!-- 第一階段 -->
             <div class="timeline-item">
                 <h2>第一階段：除役過渡期</h2>
-                <p>進行廠內設備清理，並尋址興建乾式貯存設施，移出冷卻燃料棒。</p>
-            </div>
+                <p>依法進入除役程序。進行廠內設備清理，並尋址興建乾式貯存設施，將用過的燃料棒移出進行冷卻。</p>
+                 <div class="number-container">
+                        <div class="number" id="number-2" data-target="8">8</div>
+                        <div class="unit">年</div>
+                 </div>  
+          </div>
 
-            <!-- 第二階段 -->
             <div class="timeline-item">
                 <h2>第二階段：拆除階段</h2>
-                <p>拆除反應爐及廠房組件，保守估計需要較長時間。</p>
-            </div>
+                <p>在確保安全的條件下，逐步拆除反應爐及相關廠房組件，此階段保守估計需要較長時間。</p>
+                <div class="number-container">
+                        <div class="number" id="number-3" data-target="12">12</div>
+                        <div class="unit">年</div>
+                </div>  
+          </div>
 
-            <!-- 第三階段 -->
             <div class="timeline-item">
                 <h2>第三階段：土地復原與輻射偵測</h2>
-                <p>進行土地復原與殘餘輻射偵測，至少需5年才能達到標準。</p>
-            </div>
-
+                <p>進行廠區土地的復原工作與環境殘餘輻射偵測，確保符合安全標準，此過程至少需5年以上。</p>
+                <div class="number-container">
+                        <div class="number" id="number-3" data-target="5">5</div>
+                        <div class="unit">年</div>
+                </div>  
+          </div>
         </div>
     </div>
 </div>
-</body>
-</html>
 
+<script>
+        // 等待頁面載入完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 啟動數字動畫
+            setTimeout(() => {
+                animateNumbers();
+            }, 500);
+            
+            // 監聽滾動事件，顯示時間軸項目
+            window.addEventListener('scroll', revealTimelineItems);
+            // 初始檢查是否有可見的時間軸項目
+            revealTimelineItems();
+            
+            // 如果在iframe中，發送高度訊息給父頁面
+            if (window.self !== window.top) {
+                // 定期發送高度訊息，確保動畫完成後高度正確
+                setInterval(function() {
+                    const height = document.body.scrollHeight;
+                    window.parent.postMessage({ type: 'resize', height: height }, '*');
+                }, 500);
+            }
+        });
+        
+        // 數字動畫函數
+        function animateNumbers() {
+            const numberElements = document.querySelectorAll('.number, .number2');
+            numberElements.forEach(numberElement => {
+        let targetAttr = numberElement.getAttribute('data-target');
 
+        // 判斷是否為區間
+        let start = 0;
+        let end = 0;
+        if (targetAttr.includes(',')) {
+            const [min, max] = targetAttr.split(',').map(Number);
+            start = min;
+            end = max;
+        } else {
+            end = parseInt(targetAttr);
+        }
 
+        const duration = 2000; // 動畫持續時間（毫秒）
+        const frameDuration = 1000 / 60; // 每幀持續時間（60fps）
+        const totalFrames = Math.round(duration / frameDuration);
+        
+        let frame = 0;
+        
+        const counter = setInterval(() => {
+            frame++;
+            const progress = frame / totalFrames;
+            const easedProgress = easeOutQuart(progress);
+
+            // 從 start 過渡到 end
+            let currentNumber = Math.round(start + easedProgress * (end - start));
+            
+            if (end >= 1000) {
+                numberElement.textContent = currentNumber.toLocaleString('zh-TW');
+            } else {
+                numberElement.textContent = currentNumber;
+            }
+            
+            if (frame === totalFrames) {
+                clearInterval(counter);
+                numberElement.textContent = end >= 1000 ? end.toLocaleString('zh-TW') : end;
+            }
+        }, frameDuration);
+            });
+        }
+        
+        // 緩動函數 - 快速開始，慢速結束
+        function easeOutQuart(x) {
+            return 1 - Math.pow(1 - x, 4);
+        }
+        
+        // 顯示時間軸項目
+        function revealTimelineItems() {
+            const timelineItems = document.querySelectorAll('.timeline-item, .timeline-item2, .timeline-item3');
+            
+            timelineItems.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                // 當項目進入視窗時顯示
+                if (itemTop < windowHeight * 0.85) {
+                    item.classList.add('visible');
+                }
+            });
+        }
+    </script>
+</body></html>
