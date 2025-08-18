@@ -1,39 +1,40 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>台灣核能事件時間軸</title>
+<title>台灣核能重大事件時間軸</title>
 <style>
     :root {
         /* --- 基礎顏色設定 --- */
         --primary-color: #2c3e50;
-        --secondary-color: #f5f5f5;
+        --secondary-color: #f5f5ff;
         --accent-color: #3498db;
+        --secondary-line-color: #e74c3c;
         --text-color: #333333;
-        --background-color: #ffffff;
-        --card-background: #f9f9f9;
+        --background-color: #f2f2f2;
+        --card-background: #ffffff;
         --highlight-color: #f39c12;
+        --subtitle-text-color: #7f8c8d;
 
-        /* --- 精準定位設定 --- */
-        --timeline-padding-bottom: 40px;
+        /* --- 時間軸定位設定 --- */
         --line-height: 6px;
         --circle-diameter: 24px;
-
+        --timeline-actual-padding-bottom: 200px; /* 增加更多底部空間容納紅色卡片 */
+        --axis-offset-from-card: 35px;
+        --secondary-axis-offset: 60px; /* 第二條軸線的位置 */
+        
         /* --- 自動計算 --- */
         --line-radius: calc(var(--line-height) / 2);
         --circle-radius: calc(var(--circle-diameter) / 2);
-        --line-center-y: 20px;
     }
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Noto Sans TC', sans-serif, 'Microsoft JhengHei', '微軟正黑體';
+        font-family: Arial, 'Microsoft JhengHei', '微軟正黑體', 'Noto Sans TC', sans-serif;
     }
     html, body {
         background-color: var(--background-color);
-        color: var(--text-color);
+        color: var(--primary-color);
         line-height: 1.6;
         padding: 20px;
         overflow-x: hidden;
@@ -41,87 +42,228 @@
     .container {
         max-width: 100%;
         margin: 0 auto;
-        padding: 20px;
+        padding: 0 20px;
     }
     header {
         text-align: center;
-        margin-bottom: 40px;
-        padding: 20px;
-        background-color: var(--secondary-color);
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
     }
     h1 {
-        font-size: 2.5rem;
+        font-size: 30px;
         margin-bottom: 10px;
-        color: var(--highlight-color);
+        color: var(--primary-color);
     }
     .subtitle {
         font-size: 1.2rem;
-        opacity: 0.8;
+        color: var(--subtitle-text-color);
+    }
+    .timeline-legend {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--text-color);
+    }
+    .legend-line {
+        width: 30px;
+        height: 4px;
+        border-radius: 2px;
+    }
+    .legend-line.primary {
+        background-color: var(--accent-color);
+    }
+    .legend-line.secondary {
+        background-color: var(--secondary-line-color);
+        border: 2px dashed var(--secondary-line-color);
+        background: transparent;
+    }
+    .mobile-swipe-indicator {
+        display: none;
+        text-align: center;
+        margin-bottom: 20px;
+        color: var(--subtitle-text-color);
+        font-size: 14px;
     }
     .timeline {
         display: flex;
-        padding: 60px 0 var(--timeline-padding-bottom);
+        padding: 20px 25px var(--timeline-actual-padding-bottom) 15px;
         position: relative;
         overflow-x: auto;
     }
-    .timeline-line {
-        position: absolute;
-        height: var(--line-height);
-        background-color: var(--accent-color);
-        bottom: calc(var(--line-center-y) - var(--line-radius));
-        left: 0;
-        border-radius: 3px;
-        z-index: 0;
+  
+ .timeline2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* 紅色卡片靠底 */
+    position: relative;
+    background-color:#e74c3c;
+}
+  
+    .timeline::-webkit-scrollbar {
+        height: 12px;
     }
-    .timeline-item {
-        flex: 0 0 auto;
-        width: 250px;
-        position: relative;
-        text-align: center;
-        margin: 0 20px;
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.8s ease;
-    }
-    .timeline-item.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    .timeline-item::after {
-        content: '';
-        position: absolute;
-        width: var(--circle-diameter);
-        height: var(--circle-diameter);
-        background-color: var(--accent-color); /* 實心顏色 */
-        bottom: calc(var(--line-center-y) - var(--timeline-padding-bottom) - var(--circle-radius));
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: 50%;
-        z-index: 1;
-    }
-    .timeline-content {
-        padding: 20px 30px;
-        background-color: var(--card-background);
-        position: relative;
+    .timeline::-webkit-scrollbar-track {
+        background: #e0e0e0;
         border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-        border: 1px solid #e0e0e0;
-        z-index: 2;
     }
-    .timeline-content:hover {
-        transform: scale(1.03);
+    .timeline::-webkit-scrollbar-thumb {
+        background: #b0b0b0;
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
     }
-    .timeline-content h2 {
-        font-size: 1.4rem;
-        margin-bottom: 10px;
-        color: var(--highlight-color);
+    .timeline::-webkit-scrollbar-thumb:hover {
+        background: #999;
     }
-    .timeline-content p {
-        font-size: 1rem;
-        line-height: 1.6;
+/* --- 藍色主軸線 --- */
+.timeline-line {
+    position: absolute;
+    height: var(--line-height);
+    background-color: var(--accent-color);
+    bottom: calc((var(--timeline-actual-padding-bottom) - var(--axis-offset-from-card)) - var(--line-radius));
+    left: 0;
+    border-radius: 3px;
+    z-index: 0;
+    transition: width 0.2s ease, left 0.2s ease;
+}
+
+/* 藍色卡片樣式 */
+.timeline-item {
+    flex: 0 0 auto;
+    width: 220px;
+    position: relative;
+    text-align: center;
+    margin: 0 10px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 藍色圓點 */
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: var(--circle-diameter);
+    height: var(--circle-diameter);
+    background-color: var(--accent-color);
+    bottom: calc(-1 * var(--axis-offset-from-card) - var(--circle-radius));
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* 藍色卡片內容 */
+.timeline-content {
+    padding: 15px 20px;
+    background-color: var(--card-background);
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-content:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+}
+
+.timeline-content h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--highlight-color);
+}
+
+.timeline-content p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    flex-grow: 1; 
+}
+
+  
+ /* --- 紅色虛線軸線 --- */  
+.timeline-line.secondary {
+    background: transparent;
+    border: 3px dashed #e74c3c;
+    height: 0;
+    border-radius: 0;
+    bottom: calc((var(--timeline-actual-padding-bottom) - var(--axis-offset-from-card) - 25px) - var(--line-radius)); /* 紅色線直接在藍色線下方 */
+}
+
+/* 紅色卡片樣式 */
+.timeline-item.secondary {
+    margin-top: 0px !important; /* 紅色卡片在下方 */
+}
+
+/* 紅色圓點 */
+.timeline-item.secondary::after {
+    background-color: #e74c3c;
+    bottom: calc(-1 * var(--axis-offset-from-card) - var(--circle-radius) - 25px); /* 紅色圓點在紅色線上 */
+    border: 0px solid var(--card-background);
+}
+
+/* 紅色卡片內容 */
+.timeline-content.secondary {
+    border-left: 0px solid var(--secondary-line-color);
+}
+
+.timeline-content.secondary h2 {
+    color: var(--secondary-line-color);
+}
+ 
+    .card-image {
+        width: 100%;
+        height: 110px; 
+        object-fit: cover; 
+        border-radius: 6px;
+        margin-bottom: 12px; 
+    }
+
+    /* --- 響應式設計 (RWD) --- */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+        .container {
+            padding: 0 10px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .subtitle {
+            font-size: 1rem;
+        }
+        header {
+            margin-bottom: 15px;
+        }
+        .timeline-item {
+            width: 250px;
+        }
+        .mobile-swipe-indicator {
+            display: block;
+        }
+        .timeline-legend {
+            gap: 15px;
+        }
+        .legend-item {
+            font-size: 12px;
+        }
     }
 </style>
 </head>
@@ -129,49 +271,251 @@
 <div class="container">
     <header>
         <h1>台灣核能重大事件時間軸</h1>
-        <p class="subtitle">2011-2025 核電政策與事件</p>
+        <p class="subtitle">1970年至2025年核電政策與事件</p>
     </header>
+    
+    <div class="timeline-legend">
+        <div class="legend-item">
+            <div class="legend-line primary"></div>
+            <span>核能政策／事件</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-line secondary"></div>
+            <span>蘭嶼「低放貯存場」發展</span>
+        </div>
+    </div>
+    
+    <p class="mobile-swipe-indicator">請左右滑動查看</p>
     <div class="timeline">
-        <div class="timeline-item"><div class="timeline-content"><h2>2011/3/11</h2><p>福島核災</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2015/7/1</h2><p>行政院宣布核四封存</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2017/1/11</h2><p>《電業法》修法納入2025非核家園</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2018/11/24</h2><p>「以核養綠」公投通過</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2019/7/15</h2><p>核一廠除役</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2021/12/18</h2><p>核四商轉公投未通過</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2023/3/15</h2><p>核二廠除役</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2025/5/13</h2><p>《核管法》修法三讀通過，放寬核電廠延役、重啟條件</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2025/5/17</h2><p>核三廠二號機除役，台灣進入非核家園</p></div></div>
-        <div class="timeline-item"><div class="timeline-content"><h2>2025/8/23</h2><p>重啟核三公投</p></div></div>
+        <!-- 按時間順序排列所有事件 -->
+      <div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>1970</h2>
+        <p>核准興建核一廠</p>
     </div>
 </div>
+       <div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>1974</h2>
+        <p>蘭嶼被選定為「台電核廢料貯存場」</p>
+    </div>
+</div>
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>1978/12</h2>
+        <p>核一廠啟用</p>
+    </div>
+</div>
+      <div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>1980/5</h2>
+        <p>提出興建核四廠</p>
+    </div>
+</div>
+      <div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>1981/12</h2>
+        <p>核二廠啟用</p>
+    </div>
+</div>
+
+<div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>1982/5</h2>
+        <p>蘭嶼的「低放貯存場」正式啟用</p>
+    </div>
+</div>
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>1984/7</h2>
+        <p>核三廠啟用</p>
+    </div>
+</div>
+<div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>1988/2/17</h2>
+        <p>雅美人發起第一場大規模行動 ——「220反核廢驅逐惡靈」</p>
+    </div>
+</div>
+
+<div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>1996/2</h2>
+        <p>最後一批核廢料送往蘭嶼後，貯存場因空間貯滿，不再接收核廢料</p>
+    </div>
+</div>
+
+<div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>2002/5/1</h2>
+        <p>蘭嶼發起全島罷工罷課的抗議行動</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2011/3/11</h2>
+        <p>福島核災</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2015/7/1</h2>
+        <img class="card-image" src="核四(蘇義傑).jpg" alt="核四廠控制室">
+        <p>行政院宣布核四封存</p>
+    </div>
+</div>
+
+<div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>2016/8/1</h2>
+        <p>前總統蔡英文親自向蘭嶼的雅美人道歉，提出真相調查報告</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2017/1/11</h2>
+        <p>《電業法》修法納入2025非核家園</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2018/11/24</h2>
+        <p>「以核養綠」公投通過</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2019/7/15</h2>
+        <img class="card-image" src="核一.jpg" alt="核一廠乾式貯存設施">
+        <p>核一廠除役</p>
+    </div>
+</div>
+
+<div class="timeline-item secondary visible">
+    <div class="timeline-content secondary">
+        <h2>2019/11/22</h2>
+        <p>經濟部國營事業委員會編列新台幣25.5億元的回溯補償金給雅美人，成立基金會管理</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2021/12/18</h2>
+        <p>核四商轉公投未通過</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2023/3/15</h2>
+        <img class="card-image" src="核二.jpg" alt="核二廠外觀">
+        <p>核二廠除役</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2025/5/13</h2>
+        <p>《核管法》修法三讀通過，放寬核電廠延役、重啟條件</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2025/5/17</h2>
+        <p>核三廠二號機除役，台灣進入非核家園</p>
+    </div>
+</div>
+
+<div class="timeline-item visible">
+    <div class="timeline-content">
+        <h2>2025/8/23</h2>
+        <img class="card-image" src="核三.jpg" alt="核三廠外觀">
+        <p>重啟核三公投</p>
+    </div>
+</div>
+
+
+        <!-- 紅色虛線下方的卡片（內容待定） -->
+        <!-- 這裡可以加入你想要的紅色時間軸內容 -->
+        
+    <div class="timeline-line primary"></div>
+    <div class="timeline-line secondary"></div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const timeline = document.querySelector('.timeline');
-    const line = document.createElement('div');
-    const items = document.querySelectorAll('.timeline-item');
+    const primaryLine = document.querySelector('.timeline-line.primary');
+    const secondaryLine = document.querySelector('.timeline-line.secondary');
+    const primaryItems = document.querySelectorAll('.timeline-item:not(.secondary)');
+    const secondaryItems = document.querySelectorAll('.timeline-item.secondary');
     
-    line.classList.add('timeline-line');
-    timeline.appendChild(line);
-
-    function updateLineLength() {
-        if (items.length === 0) {
+    function updateLineLength(line, items, className) {
+        if (items.length < 2) {
             line.style.width = '0px';
             return;
         }
+        const firstItem = items[0];
         const lastItem = items[items.length - 1];
+        
+        const startPosition = firstItem.offsetLeft + firstItem.offsetWidth / 2;
         const endPosition = lastItem.offsetLeft + lastItem.offsetWidth / 2;
-        line.style.width = endPosition + 'px';
+        line.style.left = startPosition + 'px';
+        line.style.width = (endPosition - startPosition) + 'px';
     }
     
-    updateLineLength();
-    window.addEventListener('resize', updateLineLength);
-
-    requestAnimationFrame(() => {
-        items.forEach(item => {
-            item.classList.add('visible');
-        });
+    function updateAllLines() {
+        const allItems = document.querySelectorAll('.timeline-item');
+        const primaryItems = document.querySelectorAll('.timeline-item:not(.secondary)');
+        const secondaryItems = document.querySelectorAll('.timeline-item.secondary');
+        
+        console.log('Primary items:', primaryItems.length);
+        console.log('Secondary items:', secondaryItems.length);
+        
+        // 藍色實線連接所有藍色項目
+        updateLineLength(primaryLine, primaryItems, 'primary');
+        
+        // 紅色虛線只連接紅色項目
+        if (secondaryItems.length > 0) {
+            updateLineLength(secondaryLine, secondaryItems, 'secondary');
+        } else {
+            secondaryLine.style.width = '0px';
+        }
+    }
+    
+    // 使用 ResizeObserver 監測時間軸尺寸變化
+    const timelineObserver = new ResizeObserver(() => {
+        updateAllLines();
     });
+
+    timelineObserver.observe(timeline);
+
+    // 卡片進入可視範圍時的淡入動畫
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        cardObserver.observe(item);
+    });
+    
+    // 初始化線條長度
+    setTimeout(updateAllLines, 100);
 });
 </script>
-</body>
-</html>
+
+</body></html>
