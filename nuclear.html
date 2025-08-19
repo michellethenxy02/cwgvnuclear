@@ -1,7 +1,7 @@
 <html lang="zh-TW"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>核三延役公投後續流程</title>
+<title>核三重啟公投後續流程</title>
 <style>
 :root {
     --primary-text-color: #2c3e50; /* 主標題文字色 (深藍灰) */
@@ -121,7 +121,14 @@ h1 {
             justify-content: center;
             margin: 20px 0;
             height: 100px;
+            flex-wrap:wrap;
+        
         }
+
+.number-container2 .desc {
+  flex-basis: 100%;   /* 讓 p 佔滿一整行，跑到最下面 */
+  margin-top: 1em;    /* 與上方保持間距 */
+}
         
 .number {
             font-size: 3.5rem;
@@ -337,7 +344,7 @@ h1 {
 </head>
 <body>
 <div class="container">
-    <h1>核三延役公投後續流程</h1>
+    <h1>核三重啟公投後續流程</h1>
     <p class="subtitle">比較通過／不通過後的後續處理步驟</p>
     <p class="mobile-swipe-indicator">請左右滑動查看</p>
 
@@ -354,17 +361,19 @@ h1 {
 
             <div class="timeline-item">
                 <h2>第二階段：立法程序</h2>
-                <p>完成相關法案的立法程序，為延役提供法律依據。</p>
+                <p>完成相關法案的立法程序，為重啟提供法律依據。</p>
                 <div class="number-container2">
                         <div class="number2" id="number-2" data-target="4">4</div>
                         <div class="unit">個月</div>
                  </div>  
             </div>
+  
+
             
             <div class="timeline-item2">
                <div class="timeline-item3">
                 <h2>第三階段：核電廠檢測</h2>
-                <p>台電依據新法規對欲延役的核電廠進行全面性的安全檢測與評估。</p>
+                <p>台電依據新法規對欲重啟的核電廠進行全面性的安全檢測與評估。</p>
             </div>
 
             <div class="timeline-item3">
@@ -378,12 +387,15 @@ h1 {
             </div>
               
 <div class="number-container2">
-    <div class="number2" data-target="2">0</div><h2>~</h2>
-    <div class="number2" data-target="5">0</div>
-    <div class="unit">年以上</div>
-  
+    <div class="number2" data-target="3.5">3.5</div>
+    <div class="unit">年</div>
+    <p class="desc">
+      行政院長卓榮泰指出，台電估算核三廠重啟的安檢程序至少需要3年半。
+    </p>
 </div>   
-            </div>
+    
+    
+    </div>
             
         </div>
 
@@ -393,7 +405,7 @@ h1 {
 
             <div class="timeline-item">
                 <h2>第一階段：除役過渡期</h2>
-                <p>依法進入除役程序。進行廠內設備清理，並尋址興建乾式貯存設施，將用過的燃料棒移出進行冷卻。</p>
+                <p>進行廠內設備清理，並尋址興建乾式貯存設施，移出冷卻燃料棒。</p>
                  <div class="number-container">
                         <div class="number" id="number-2" data-target="8">8</div>
                         <div class="unit">年</div>
@@ -402,7 +414,7 @@ h1 {
 
             <div class="timeline-item">
                 <h2>第二階段：拆除階段</h2>
-                <p>在確保安全的條件下，逐步拆除反應爐及相關廠房組件，此階段保守估計需要較長時間。</p>
+                <p>拆除反應爐及廠房組件，保守估計需要較長時間。</p>
                 <div class="number-container">
                         <div class="number" id="number-3" data-target="12">12</div>
                         <div class="unit">年</div>
@@ -411,7 +423,7 @@ h1 {
 
             <div class="timeline-item">
                 <h2>第三階段：土地復原與輻射偵測</h2>
-                <p>進行廠區土地的復原工作與環境殘餘輻射偵測，確保符合安全標準，此過程至少需5年以上。</p>
+                <p>進行土地復原與殘餘輻射偵測，至少需5年才能達到標準。</p>
                 <div class="number-container">
                         <div class="number" id="number-3" data-target="5">5</div>
                         <div class="unit">年</div>
@@ -420,47 +432,86 @@ h1 {
         </div>
     </div>
 </div>
+ 
 
+<br><br>
+<p>資料來源／核安會、行政院、台電</p>
+  
 <script>
-        // 等待頁面載入完成
-        document.addEventListener('DOMContentLoaded', function() {
-            // 啟動數字動畫
-            setTimeout(() => {
-                animateNumbers();
-            }, 500);
-            
-            // 監聽滾動事件，顯示時間軸項目
-            window.addEventListener('scroll', revealTimelineItems);
-            // 初始檢查是否有可見的時間軸項目
-            revealTimelineItems();
-            
-            // 如果在iframe中，發送高度訊息給父頁面
-            if (window.self !== window.top) {
-                // 定期發送高度訊息，確保動畫完成後高度正確
-                setInterval(function() {
-                    const height = document.body.scrollHeight;
-                    window.parent.postMessage({ type: 'resize', height: height }, '*');
-                }, 500);
-            }
-        });
-        
-        // 數字動畫函數
-        function animateNumbers() {
-            const numberElements = document.querySelectorAll('.number, .number2');
-            numberElements.forEach(numberElement => {
-        let targetAttr = numberElement.getAttribute('data-target');
+// 等待頁面載入完成
+document.addEventListener('DOMContentLoaded', function() {
+    // 啟動數字動畫
+    setTimeout(() => {
+        animateNumbers();
+    }, 500);
+    
+    // 監聽滾動事件，顯示時間軸項目
+    window.addEventListener('scroll', revealTimelineItems);
+    // 初始檢查是否有可見的時間軸項目
+    revealTimelineItems();
+    
+  const leftItems = document.querySelectorAll(
+        '.timeline-column.left .timeline-item, .timeline-column.left .timeline-item2, .timeline-column.left .timeline-item3'
+    );
+    
+    leftItems.forEach((item, index) => {
+        item.style.animationDelay = `${0.2 + index * 0.2}s`; // 每個延遲0.2秒
+    });
+  
+  
+    // 如果在iframe中，發送高度訊息給父頁面
+    if (window.self !== window.top) {
+        // 定期發送高度訊息，確保動畫完成後高度正確
+        setInterval(function() {
+            const height = document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height }, '*');
+        }, 500);
+    }
+});
 
-        // 判斷是否為區間
+// 數字動畫函數
+function animateNumbers() {
+    const numberElements = document.querySelectorAll('.number, .number2');
+    
+    numberElements.forEach(numberElement => {
+        let targetAttr = numberElement.getAttribute('data-target');
         let start = 0;
         let end = 0;
+        let hasDecimal = false;
+        let decimalPlaces = 0;
+        
+        // 判斷是否為區間格式 (例如: "1,10" 表示從1到10)
         if (targetAttr.includes(',')) {
             const [min, max] = targetAttr.split(',').map(Number);
             start = min;
             end = max;
         } else {
-            end = parseInt(targetAttr);
+            // 單一數字的起始值邏輯
+            end = parseFloat(targetAttr);
+            if (end % 1 !== 0) {
+                // 如果是小數，從1.0開始
+                start = 1.0;
+            } else {
+                // 如果是整數，從0開始
+                start = 0;
+            }
         }
-
+        
+        // 檢查是否有小數
+        if (end % 1 !== 0) {
+            hasDecimal = true;
+            decimalPlaces = end.toString().split('.')[1].length;
+        }
+        
+        // 立即設置初始值，避免閃爍
+        if (hasDecimal) {
+            numberElement.textContent = start.toFixed(decimalPlaces);
+        } else if (start >= 1000) {
+            numberElement.textContent = start.toLocaleString('zh-TW');
+        } else {
+            numberElement.textContent = start.toString();
+        }
+        
         const duration = 2000; // 動畫持續時間（毫秒）
         const frameDuration = 1000 / 60; // 每幀持續時間（60fps）
         const totalFrames = Math.round(duration / frameDuration);
@@ -471,42 +522,59 @@ h1 {
             frame++;
             const progress = frame / totalFrames;
             const easedProgress = easeOutQuart(progress);
-
-            // 從 start 過渡到 end
-            let currentNumber = Math.round(start + easedProgress * (end - start));
             
-            if (end >= 1000) {
-                numberElement.textContent = currentNumber.toLocaleString('zh-TW');
+            // 計算當前數字
+            let currentNumber = start + easedProgress * (end - start);
+            
+            // 格式化顯示
+            let displayText;
+            if (hasDecimal) {
+                // 有小數的情況，保持小數位數
+                displayText = currentNumber.toFixed(decimalPlaces);
+            } else if (Math.round(currentNumber) >= 1000) {
+                // 大於等於1000的整數，添加千分位分隔符
+                displayText = Math.round(currentNumber).toLocaleString('zh-TW');
             } else {
-                numberElement.textContent = currentNumber;
+                // 小於1000的整數
+                displayText = Math.round(currentNumber).toString();
             }
+           
+            numberElement.textContent = displayText;
             
+            // 動畫結束時確保顯示準確的最終值
             if (frame === totalFrames) {
                 clearInterval(counter);
-                numberElement.textContent = end >= 1000 ? end.toLocaleString('zh-TW') : end;
+                
+                if (hasDecimal) {
+                    numberElement.textContent = end.toFixed(decimalPlaces);
+                } else if (end >= 1000) {
+                    numberElement.textContent = end.toLocaleString('zh-TW');
+                } else {
+                    numberElement.textContent = end.toString();
+                }
             }
         }, frameDuration);
-            });
-        }
+    });
+}
+
+// 緩動函數 - 快速開始，慢速結束
+function easeOutQuart(x) {
+    return 1 - Math.pow(1 - x, 4);
+}
+
+// 顯示時間軸項目
+function revealTimelineItems() {
+    const timelineItems = document.querySelectorAll('.timeline-item, .timeline-item2, .timeline-item3');
+    
+    timelineItems.forEach(item => {
+        const itemTop = item.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
         
-        // 緩動函數 - 快速開始，慢速結束
-        function easeOutQuart(x) {
-            return 1 - Math.pow(1 - x, 4);
+        // 當項目進入視窗時顯示
+        if (itemTop < windowHeight * 0.85) {
+            item.classList.add('visible');
         }
-        
-        // 顯示時間軸項目
-        function revealTimelineItems() {
-            const timelineItems = document.querySelectorAll('.timeline-item, .timeline-item2, .timeline-item3');
-            
-            timelineItems.forEach(item => {
-                const itemTop = item.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                // 當項目進入視窗時顯示
-                if (itemTop < windowHeight * 0.85) {
-                    item.classList.add('visible');
-                }
-            });
-        }
-    </script>
+    });
+}
+</script>
 </body></html>
