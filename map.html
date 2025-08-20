@@ -62,9 +62,8 @@
     }
 
     #map { 
-      margin-top:-100px;
       width: 100%; 
-      height: 1000px; 
+      height: 600px; 
       display: block; 
       border: none;
       border-radius: 12px;
@@ -87,7 +86,7 @@
 
     .region.selected { stroke-width: 1.5; stroke: var(--accent); }
 
-    .tooltip { position: fixed; pointer-events: none; z-index: 50; transform: translate(12px, 12px); }
+    .tooltip { position: fixed; pointer-events: none; z-index: 50; }
     .tooltip .inner {
       background: var(--panel);
       border: 1px solid #ccc;
@@ -115,38 +114,67 @@
       padding: 18px;
       box-shadow: 0 6px 12px rgba(0,0,0,.15);
       border: 1px solid #ddd;
-      max-height: 450px;
-      overflow-y: auto;
+      
       font-size: 12px;
     }
 
+    /* 圖例樣式 */
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+    
     /* 響應式設計：768px 以下時 panel 移到下方 */
     @media (max-width: 768px) {
-      .map-container {
+      .container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        text-align: center;
       }
-      
+       
       #panel {
-        margin-top:-300px;
         position: relative;
         bottom: auto;
         right: auto;
-        width: auto;
-        max-width: 90%;
+        width: 100%;
+        max-width: 350px;
         max-height: none;
-        margin: 20px auto 0;
+        margin-top: 20px;
         padding: 12px;
+        text-align: center;
+        display:block;
+        margin: 20px auto 0 auto; /* 水平置中 + 上間距 */
       }
       
       #map {
-        margin-top:-300px;
-        height: 1000px;
+        width:600px;
+        height: 500px;
+        margin: 0 auto;
+        display:block;
+        text-align:center;
       }
       
       h1 {
         font-size: 24px;
+        text-align: center;
       }
     }
 
@@ -154,27 +182,36 @@
     @media (max-width: 480px) {
       .container {
         padding: 12px;
+        text-align: center;
+        align-items: center;
       }
       
+      
+      
       #panel {
-        margin-top:-300px;
         padding: 16px;
-        max-width:95%;
+        display:block;
+        margin: 0 auto 0 auto;
+        text-align: center;
+        align-items: center;
+         margin: 20px auto 0 auto;
       }
       
       #map {
-        margin-top:-300px;
-        height: 1100px;
+        width:600px;
+        height: 400px;
+        display:block;
+         margin: 0 auto;
       }
     }
 
-    .stat-row { display:flex; justify-content:space-between; align-items: center; margin:8px 0; padding:4px; border-radius:4px; }
-    .stat-row.agree { background: rgba(109,127,151,.15); }
-    .stat-row.disagree { background: rgba(196,54,86,.08); }
+    .stat-row { display:flex; justify-content:space-between; align-items: center; margin:8px 0; padding:4px; border-radius:6px; }
+    .stat-row.agree { background: rgba(109,127,151,.15);border-radius:6px; }
+    .stat-row.disagree { background: rgba(196,54,86,.08);border-radius:6px; }
     .stat-label { font-weight:600; font-size:12px; }
     .stat-value { font-size:12px; font-weight:700; }
     .percentage { font-size:10px; color: var(--muted); margin-left:4px; }
-    .total-votes { text-align:center; font-size:12px; margin:10px 0; padding:8px; background:#f8f9fa; border-radius:4px; }
+    .total-votes { text-align:center; font-size:12px; margin:10px 0; padding:8px; background:#f8f9fa; border-radius:6px; }
     .big-bar { height:12px; background:#eee; border-radius:6px; margin:10px 0; overflow:hidden; position:relative; }
     .big-bar .agree-fill { background: var(--agree); }
     .big-bar .disagree-fill { background: var(--disagree); }
@@ -184,8 +221,23 @@
 </head>
 <body>
 <div class="container">
-  <h1>823「重啟核三」公投開票地圖</h1>
+  <h1>823「重啟核三」公投開票地圖（不斷更新）</h1>
+  <br>
   <p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
+  <div class="legend">
+  <div class="legend-item">
+    <div class="legend-color" style="background: var(--agree);"></div>
+    <span>同意票居多</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-color" style="background: var(--disagree);"></div>
+    <span>不同意票居多</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-color" style="background: #ccc;"></div>
+    <span>尚無資料</span>
+  </div>
+</div>
   
   <div class="map-container">
     <div class="map-wrapper">
@@ -196,6 +248,9 @@
       </div>
     </div>
   </div>
+  
+  
+
 </div>
 
 <script>
@@ -208,15 +263,9 @@ const svg = d3.select("#map")
 
 const projection = d3.geoMercator()
   .center([121, 24])
-  .scale(8000)
+  .scale(6000)
   .translate([width / 2, height / 2]);
 
-function getScale() {
-  if (window.innerWidth <= 480) return 6000;  // 手機比例放大
-  if (window.innerWidth <= 768) return 6000;  // 平板
-  return 7000;                                 // 桌機
-}
-  
 const path = d3.geoPath().projection(projection);
 
 const voteData = {
@@ -243,6 +292,31 @@ const voteData = {
    "金門縣": { agree: 52000, disagree: 48000 },
    "連江縣": { agree: 8000, disagree: 9000 }
 };
+  
+  const populationData = {
+  "台北市": 2087808,
+  "新北市": 3501235,
+  "桃園市": 1971813,
+  "台中市": 2416540,
+  "台南市": 1600962,
+  "高雄市": 2358186,
+  "基隆市": 318691,
+  "新竹市": 370898,
+  "嘉義市": 221496,
+  "新竹縣": 488509,
+  "苗栗縣": 457783,
+  "彰化縣": 1042775,
+  "南投縣": 410405,
+  "雲林縣": 567994,
+  "嘉義縣": 424950,
+  "屏東縣": 688202,
+  "宜蘭縣": 388906,
+  "花蓮縣": 271519,
+  "台東縣": 181146,
+  "澎湖縣": 94412,
+  "金門縣": 125917,
+  "連江縣": 11944
+};
 
 const tooltip = d3.select("body").append("div")
   .attr("class", "tooltip")
@@ -265,11 +339,14 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       let city = d.properties.COUNTYNAME;
       if(city === "桃園縣") city = "桃園市";
       const data = voteData[city];
-      if (!data) return;
+       const population = populationData[city];
+  if (!data || !population) return;
 
       const total = data.agree + data.disagree;
-      const agreePct = (data.agree / total * 100).toFixed(2);
-      const disagreePct = (data.disagree / total * 100).toFixed(2);
+      const agreePct = (data.agree / population * 100).toFixed(2);
+      const disagreePct = (data.disagree / population * 100).toFixed(2);
+      const turnoutPct = (total / population * 100).toFixed(2);
+
 
       tooltip.transition().style("opacity", 1);
       tooltip.html(`
@@ -285,33 +362,30 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
           <div class="bar" style="height:12px; background:rgba(196,54,86,.08); border-radius:6px; overflow:hidden;">
             <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree);"></div>
           </div>
+
+
+
+<div class="row"  style="margin-top:8px; padding-top:8px; border-top:1px solid #eee;"><span class="pill agree">總投票數</span><span>${total.toLocaleString()} (${turnoutPct}%)</span></div>
+          <div class="bar" style="height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-bottom:6px;">
+            <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6"></div>
+          </div>
+
+ <div class="row">
+        <span style="font-size:11px; color:#666;">投票權人數</span>
+        <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
+      </div>
+
+
+
         </div>
       `)
-      .style("left", (event.pageX + 15) + "px")
-      .style("top", (event.pageY - 28) + "px");
+      .style("left", (event.pageX - 110) + "px")
+      .style("top", (event.pageY - 220) + "px");
     })
     .on("mousemove", function(event) {
-  // 這裡就是要改的地方 👇
-  const tooltipNode = tooltip.node();
-  const tooltipWidth = tooltipNode.offsetWidth;
-  const tooltipHeight = tooltipNode.offsetHeight;
-
-  let left = event.pageX + 15;
-  let top = event.pageY - 28;
-
-  if (left + tooltipWidth > window.innerWidth) {
-    left = event.pageX - tooltipWidth - 15;
-  }
-  if (top + tooltipHeight > window.innerHeight) {
-    top = window.innerHeight - tooltipHeight - 10;
-  }
-  if (top < 0) {
-    top = 10;
-  }
-
-  tooltip.style("left", left + "px")
-         .style("top", top + "px");
-})
+      tooltip.style("left", (event.pageX -110) + "px")
+             .style("top", (event.pageY - 220) + "px");
+    })
     .on("mouseout", function() {
       tooltip.transition().style("opacity", 0);
     })
@@ -331,7 +405,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
           <h3>${city}</h3>
 
           <!-- 同意票 -->
-          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;">
+          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
             <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;"></div>
             <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
               <span>同意票</span>
@@ -340,7 +414,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
           </div>
 
           <!-- 不同意票 -->
-          <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;">
+          <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
             <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;"></div>
             <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
               <span>不同意票</span>
@@ -428,11 +502,11 @@ function displayTotalStats() {
     </div>
 
     <div style="position: relative; margin:16px 0; padding-top:20px;">
-      <div class="big-bar" style="background:#eee; height:40px; border-radius:12px; position:relative;">
+      <div class="big-bar" style="background:#eee; height:40px; border-radius:12px; position:relative;overflow: hidden">
         <div style="position:absolute; top:0; left:0; height:100%; width:${votePct}%; background: rgba(0,0,0,0.05); border-radius:12px;"></div>
         <div style="position:absolute; top:0; left:0; height:100%; width:${agreePctOfTotal}%; background: var(--agree); border-radius:12px 0 0 12px;"></div>
         <div style="position:absolute; top:0; left:${agreePctOfTotal}%; height:100%; width:${disagreePctOfTotal}%; background: var(--disagree);"></div>
-        <div class="threshold" style="position:absolute; left:${thresholdPct}%; top:0; width:3px; height:100%; background: yellow;"></div>
+        <div class="threshold" style="position:absolute; left:${thresholdPct}%; top:0; width:3px; height:100%; background: #F7931D;"></div>
       </div>
 
       <div style="position:absolute; left:${thresholdPct}%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
