@@ -12,8 +12,8 @@
       --bg: #f2f2f2;
       --panel: #ffffff;
       --accent: #0077c0;
-      --agree: #2a7a4f;
-      --disagree: #c43656;
+      --agree: #6D7F97;    /* 莫蘭迪藍 */
+      --disagree: #976666;
       --text: #222222;
       --muted: #666666;
     }
@@ -38,11 +38,37 @@
       color: var(--text);
     }
 
-    .map-row { display:grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
-    @media (max-width: 980px){ .map-row { grid-template-columns: 1fr; } }
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 16px;
+      text-align: center;
+    }
 
-    .map-card { position: relative; }
-    #map { width: 100%; height: 100vh; min-height: 520px; display:block; }
+    /* 修改：地圖容器佈局 - 改回相對定位 */
+    .map-container {
+      position: relative;
+      display: block;
+      margin-top: 20px;
+      border: none;
+    }
+
+    .map-wrapper {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+      border: none;
+      outline: none;
+    }
+
+    #map { 
+      width: 100%; 
+      height: 600px; 
+      display: block; 
+      border: none;
+      border-radius: 12px;
+      outline: none;
+    }
 
     .region {
       cursor: pointer;
@@ -56,7 +82,6 @@
       filter: brightness(1.3);
       stroke-width: 2px;
       stroke: #FFA500;
-      box-shadow: 0 0 10px rgba(255,165,0,0.5);
     }
 
     .region.selected { stroke-width: 1.5; stroke: var(--accent); }
@@ -75,60 +100,115 @@
     .tooltip .row { display:flex; align-items:center; justify-content:space-between; margin: 4px 0; font-size: 13px; }
 
     .pill { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-    .pill.agree { background: rgba(42,122,79,.15); color: var(--agree); border: 1px solid rgba(42,122,79,.35); }
-    .pill.disagree { background: rgba(196,54,86,.12); color: var(--disagree); border: 1px solid rgba(196,54,86,.32); }
+    .pill.agree { background: rgba(109,127,151,.15); color: var(--agree); border: 1px solid rgba(109,127,151,.35); }
+    .pill.disagree { background: rgba(151,102,102,.12); color: var(--disagree); border: 1px solid rgba(151,102,102,.32); }
 
+    /* 修改：Panel 樣式 - 改回右下角 */
     #panel {
       position: absolute;
       bottom: 20px;
-      right: 20px;
-      width: 320px;
+      right: -60px;
+      width: 270px;
       background: var(--panel);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow:0 10px 20px rgba(0,0,0,.15);
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 6px 12px rgba(0,0,0,.15);
+      border: 1px solid #ddd;
+      max-height: 450px;
+      overflow-y: auto;
+      font-size: 12px;
     }
 
-    .stat-row { display:flex; justify-content:space-between; align-items: center; margin:12px 0; padding:8px; border-radius:8px; }
-    .stat-row.agree { background: rgba(42,122,79,.1); }
-    .stat-row.disagree { background: rgba(196,54,86,.08); }
-    .stat-label { font-weight:600; font-size:16px; }
-    .stat-value { font-size:18px; font-weight:700; }
-    .percentage { font-size:14px; color: var(--muted); margin-left:8px; }
-    .total-votes { text-align:center; font-size:16px; margin:16px 0; padding:12px; background:#f8f9fa; border-radius:8px; }
-    .big-bar { height:20px; background:#eee; border-radius:10px; margin:16px 0; overflow:hidden; position:relative; }
-    .big-bar .agree-fill { height:100%; background:var(--agree); float:left; }
-    .big-bar .disagree-fill { height:100%; background:var(--disagree); float:right; }
+    /* 響應式設計：768px 以下時 panel 移到下方 */
+    @media (max-width: 768px) {
+      .map-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      #panel {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        width: 100%;
+        max-width: 350px;
+        max-height: none;
+        margin-top: 20px;
+        padding: 12px;
+      }
+      
+      #map {
+        height: 500px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+    }
 
-    .region-info { margin-top:24px; padding-top:16px; border-top:2px solid #eee; }
-    .region-title { font-size:20px; font-weight:700; margin-bottom:12px; }
+    /* 更小屏幕優化 */
+    @media (max-width: 480px) {
+      .container {
+        padding: 12px;
+      }
+      
+      #panel {
+        padding: 16px;
+      }
+      
+      #map {
+        height: 400px;
+      }
+    }
+
+    .stat-row { display:flex; justify-content:space-between; align-items: center; margin:8px 0; padding:4px; border-radius:4px; }
+    .stat-row.agree { background: rgba(109,127,151,.15); }
+    .stat-row.disagree { background: rgba(196,54,86,.08); }
+    .stat-label { font-weight:600; font-size:12px; }
+    .stat-value { font-size:12px; font-weight:700; }
+    .percentage { font-size:10px; color: var(--muted); margin-left:4px; }
+    .total-votes { text-align:center; font-size:12px; margin:10px 0; padding:8px; background:#f8f9fa; border-radius:4px; }
+    .big-bar { height:12px; background:#eee; border-radius:6px; margin:10px 0; overflow:hidden; position:relative; }
+    .big-bar .agree-fill { background: var(--agree); }
+    .big-bar .disagree-fill { background: var(--disagree); }
+    .region-info { margin-top:16px; padding-top:10px; border-top:1px solid #eee; }
+    .region-title { font-size:16px; font-weight:700; margin-bottom:8px; }
   </style>
 </head>
 <body>
-
-<h1>823「重啟核三」公投開票地圖</h1>
-<p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
-<svg id="map"></svg>
-<div id="panel">
-  <h2>全台票數統計</h2>
-  <div id="totalStats"></div>
+<div class="container">
+  <h1>823「重啟核三」公投開票地圖</h1>
+  <p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
+  
+  <div class="map-container">
+    <div class="map-wrapper">
+      <svg id="map"></svg>
+      <div id="panel">
+        <h2 style="font-size: 14px; margin-bottom: 8px;">全台票數統計</h2>
+        <div id="totalStats"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const width = 800, height = 600;
+const width = 700, height = 600;
 const svg = d3.select("#map")
   .attr("width", "100%")
-  .attr("height", height);
+  .attr("height", height)
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .attr("preserveAspectRatio", "xMidYMid meet");
 
 const projection = d3.geoMercator()
   .center([121, 24])
-  .scale(7000)
+  .scale(6000)
   .translate([width / 2, height / 2]);
 
 const path = d3.geoPath().projection(projection);
 
 const voteData = {
-   "基隆市": { agree: 1200, disagree: 1100 },
+   "基隆市": { agree: 0, disagree: 0 },
    "台北市": { agree: 930000, disagree: 80000 },
    "新北市": { agree: 1450000, disagree: 1000 },
    "桃園市": { agree: 65000, disagree: 600 },
@@ -174,6 +254,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       if(city === "桃園縣") city = "桃園市";
       const data = voteData[city];
       if (!data) return;
+
       const total = data.agree + data.disagree;
       const agreePct = (data.agree / total * 100).toFixed(2);
       const disagreePct = (data.disagree / total * 100).toFixed(2);
@@ -182,13 +263,15 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       tooltip.html(`
         <div class="inner">
           <h3>${city}</h3>
+          
           <div class="row"><span class="pill agree">同意</span><span>${data.agree.toLocaleString()} (${agreePct}%)</span></div>
-          <div class="bar agree">
-            <div class="fill" style="width:${agreePct}%"></div>
+          <div class="bar" style="height:12px; background:rgba(109,127,151,.15); border-radius:6px; overflow:hidden; margin-bottom:6px;">
+            <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree);"></div>
           </div>
+
           <div class="row"><span class="pill disagree">不同意</span><span>${data.disagree.toLocaleString()} (${disagreePct}%)</span></div>
-          <div class="bar disagree">
-            <div class="fill" style="width:${disagreePct}%"></div>
+          <div class="bar" style="height:12px; background:rgba(196,54,86,.08); border-radius:6px; overflow:hidden;">
+            <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree);"></div>
           </div>
         </div>
       `)
@@ -218,7 +301,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
           <h3>${city}</h3>
 
           <!-- 同意票 -->
-          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(42,122,79,.1); position: relative; margin:8px 0;">
+          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;">
             <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;"></div>
             <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
               <span>同意票</span>
@@ -248,31 +331,27 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     });
 
   // 核三廠位置
-const npp3 = projection([120.751667, 21.958056]); // 你的新座標
+  const npp3 = projection([120.751667, 21.958056]);
 
-
-// 加 emoji
-svg.append("text")
-   .attr("x", npp3[0])
-   .attr("y", npp3[1] + 5)     // 微調 emoji 垂直位置
-   .attr("text-anchor", "middle")
-   .attr("font-size", "30px")
-   .text("☢️");
-  
-  
-// 添加文字標籤
-    svg.append("text")
-        .attr("x", npp3[0] - 85) // 稍微偏移避免與圓圈重疊
-        .attr("y", npp3[1] + 3)  // 垂直置中對齊
-        .attr("class", "marker-label")
-        .style("font-size", "20px")
-        .style("font-family", "微軟正黑體, sans-serif")
-        .style("font-weight", "bold") 
-        .style("fill", "#F7931D")
-        .text("核三廠");
-
+  // 加 emoji
+  svg.append("text")
+     .attr("x", npp3[0])
+     .attr("y", npp3[1] + 5)
+     .attr("text-anchor", "middle")
+     .attr("font-size", "30px")
+     .text("☢️");
+    
+  // 添加文字標籤
+  svg.append("text")
+      .attr("x", npp3[0] - 85)
+      .attr("y", npp3[1] + 3)
+      .attr("class", "marker-label")
+      .style("font-size", "20px")
+      .style("font-family", "微軟正黑體, sans-serif")
+      .style("font-weight", "bold") 
+      .style("fill", "#F7931D")
+      .text("核三廠");
 });
-  
 
 // ===== 全台統計函數 =====
 function calculateTotalStats() {
@@ -326,13 +405,13 @@ function displayTotalStats() {
         <div class="threshold" style="position:absolute; left:${thresholdPct}%; top:0; width:3px; height:100%; background: yellow;"></div>
       </div>
 
-      <div style="position:absolute; left:${thresholdPct}%; top:-10px; transform:translateX(-50%); font-size:15px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
+      <div style="position:absolute; left:${thresholdPct}%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
         同意門檻<br>${threshold.toLocaleString()}人
       </div>
 
-      <div style="position:absolute; left:100%; top:50%; width:3px; height:50%; background:#F7931D;"></div>
+      <div style="position:absolute; left:100%; top:45%; width:3px; height:55%; background:#F7931D;"></div>
 
-      <div style="position:absolute; left:88%; top:-10px; transform:translateX(-50%); font-size:15px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
+      <div style="position:absolute; left:88%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
         總投票權人<br>20,002,091人
       </div>
     </div>
