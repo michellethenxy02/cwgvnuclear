@@ -281,6 +281,24 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     .on("mousemove", function(event) {
       tooltip.style("left", (event.pageX + 15) + "px")
              .style("top", (event.pageY - 28) + "px");
+    
+    // 避免超過右邊界
+  if (left + tooltipWidth > window.innerWidth) {
+    left = event.pageX - tooltipWidth - 15;
+  }
+
+  // 避免超過下邊界
+  if (top + tooltipHeight > window.innerHeight) {
+    top = window.innerHeight - tooltipHeight - 10;
+  }
+
+  // 避免超過上邊界
+  if (top < 0) {
+    top = 10;
+  }
+
+  tooltip.style("left", left + "px")
+         .style("top", top + "px");
     })
     .on("mouseout", function() {
       tooltip.transition().style("opacity", 0);
