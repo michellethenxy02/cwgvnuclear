@@ -131,10 +131,10 @@
         position: relative;
         bottom: auto;
         right: auto;
-        width: 100%;
-        max-width: 350px;
+        width: auto;
+        max-width: 90%;
         max-height: none;
-        margin-top: 20px;
+        margin: 20px auto 0;
         padding: 12px;
       }
       
@@ -155,6 +155,7 @@
       
       #panel {
         padding: 16px;
+        max-width:95%
       }
       
       #map {
@@ -279,27 +280,27 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       .style("top", (event.pageY - 28) + "px");
     })
     .on("mousemove", function(event) {
-      tooltip.style("left", (event.pageX + 15) + "px")
-             .style("top", (event.pageY - 28) + "px");
-    
-    // 避免超過右邊界
+  // 這裡就是要改的地方 👇
+  const tooltipNode = tooltip.node();
+  const tooltipWidth = tooltipNode.offsetWidth;
+  const tooltipHeight = tooltipNode.offsetHeight;
+
+  let left = event.pageX + 15;
+  let top = event.pageY - 28;
+
   if (left + tooltipWidth > window.innerWidth) {
     left = event.pageX - tooltipWidth - 15;
   }
-
-  // 避免超過下邊界
   if (top + tooltipHeight > window.innerHeight) {
     top = window.innerHeight - tooltipHeight - 10;
   }
-
-  // 避免超過上邊界
   if (top < 0) {
     top = 10;
   }
 
   tooltip.style("left", left + "px")
          .style("top", top + "px");
-    })
+})
     .on("mouseout", function() {
       tooltip.transition().style("opacity", 0);
     })
