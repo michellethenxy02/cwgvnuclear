@@ -195,6 +195,17 @@
     transition: opacity 0.1s ease;
   }
       
+      html:active .tooltip,
+  body:active .tooltip {
+    opacity: 0 !important;
+    transition: opacity 0.05s ease;
+  }
+  
+  /* 任何觸摸事件都隱藏 */
+  *:active .tooltip {
+    opacity: 0 !important;
+  }
+      
       .container {
         display: flex;
   justify-content: center;
@@ -208,8 +219,8 @@
       transform: translateY(-100px) translateX(-30px) !important;
         pointer-events: none;
         
-        max-width: 90vw !important;      /* 最大寬度不超過螢幕90% */
-    max-height: 50vh !important;     /* 最大高度不超過螢幕50% */
+        max-width: 60vw !important;      /* 最大寬度不超過螢幕90% */
+    max-height: 40vh !important;     /* 最大高度不超過螢幕50% */
     width: auto !important;   
         
          left: 5vw !important;            /* 強制左邊距至少5vw */
