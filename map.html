@@ -167,7 +167,7 @@
       
       #map {
         width:90vw;
-        max-width: 300px;
+        max-width: 350px;
         height: 500px;
         margin: 0 auto;
         display:block;
@@ -217,7 +217,12 @@
       
       .tooltip {
       transform: translateY(-100px) translateX(-30px) !important;
-        pointer-events: none；
+        pointer-events: none;
+        
+        max-width: 60vw !important;      /* 最大寬度不超過螢幕90% */
+    max-height: 40vh !important;     /* 最大高度不超過螢幕50% */
+    width: auto !important;   
+        
          left: 5vw !important;            /* 強制左邊距至少5vw */
     right: 5vw !important;
         
@@ -589,27 +594,6 @@ function displayTotalStats() {
 
 
   `);
-
-
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tooltips = document.querySelectorAll(".tooltip");
-
-  function hideTooltips() {
-    tooltips.forEach(t => {
-      t.style.opacity = "0";
-    });
-  }
-
-  // 只在手機/平板啟用
-  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    document.addEventListener("touchmove", hideTooltips, { passive: true });
-    document.addEventListener("touchstart", hideTooltips, { passive: true });
-    document.addEventListener("scroll", hideTooltips, { passive: true });
-  }
-});
-</script>
-
 }
 
 displayTotalStats();
