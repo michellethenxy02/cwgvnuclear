@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>台灣地圖｜同意/不同意 互動統計</title>
   <!-- D3 & TopoJSON CDN -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -166,7 +166,7 @@
       }
       
       #map {
-        width:600px;
+        width:100vw;
         height: 500px;
         margin: 0 auto;
         display:block;
@@ -202,7 +202,8 @@
       }
       
       .tooltip {
-      transform: translateY(-100px) !important;  /* 強制往上移100px */
+      transform: translateY(-100px) !important;
+        transform: translateX(-30px) !important;/* 強制往上移100px */
         pointer-events: auto;
        }
       
@@ -216,7 +217,7 @@
       }
       
       #map {
-        width:600px;
+        width:100vw;
         height: 400px;
         display:block;
         margin: 0 auto;
