@@ -182,6 +182,16 @@
 
     /* 更小屏幕優化 */
     @media (max-width: 480px) {
+     body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+  }
+      
+       body:active .tooltip {
+    opacity: 0 !important;
+    transition: opacity 0.1s ease;
+  }
+      
       .container {
         display: flex;
   justify-content: center;
@@ -193,6 +203,7 @@
       
       .tooltip {
       transform: translateY(-100px) !important;  /* 強制往上移100px */
+        pointer-events: auto;
        }
       
       #panel {
