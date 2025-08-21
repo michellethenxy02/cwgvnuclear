@@ -408,63 +408,81 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     .on("mouseout", function() {
       tooltip.transition().style("opacity", 0);
     })
-    .on("click", function(event, d) {
-      let city = d.properties.COUNTYNAME;
-      if(city === "桃園縣") city = "桃園市";
-      const data = voteData[city];
-     const population = populationData[city];
-  if (!data || !population) return;
-      const total = data.agree + data.disagree;
-      const agreePct = (data.agree / population * 100).toFixed(2);
-      const disagreePct = (data.disagree / population * 100).toFixed(2);
-      const turnoutPct = (total / population * 100).toFixed(2);
+  // ===== 點擊地圖區域 =====
+svg.selectAll(".region")
+  .on("click", function(event, d) {
+    let city = d.properties.COUNTYNAME;
+    if(city === "桃園縣") city = "桃園市";
+    const data = voteData[city];
+    const population = populationData[city];
+    if (!data || !population) return;
 
-      const panel = d3.select("#panel");
-      panel.html(`
-        <h3>全台統計</h3>
-        <div id="totalStats"></div>
-        <div class="region-info">
-          <h3>${city}</h3>
+    const total = data.agree + data.disagree;
+    const agreePct = (data.agree / population * 100).toFixed(2);
+    const disagreePct = (data.disagree / population * 100).toFixed(2);
+    const turnoutPct = (total / population * 100).toFixed(2);
 
-          <!-- 同意票 -->
-          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
-            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>同意票</span>
-              <span>${data.agree.toLocaleString()} (${agreePct}%)</span>
-            </div>
-          </div>
+    const panel = d3.select("#panel");
+    panel.html(`
+      <h3>全台票數統計</h3>
+      <div id="totalStats"></div>
+      <div class="region-info">
+        <h3>${city}</h3>
 
-          <!-- 不同意票 -->
-          <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
-            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>不同意票</span>
-              <span>${data.disagree.toLocaleString()} (${disagreePct}%)</span>
-            </div>
+        <!-- 同意票 -->
+        <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
+          <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
+          <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+            <span>同意票</span>
+            <span>${data.agree.toLocaleString()} (${agreePct}%)</span>
           </div>
         </div>
 
-        <!-- 總投票數  -->
-          <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
-            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>總投票數</span>
-              <span>${total.toLocaleString()} (${turnoutPct}%)</span>
-            </div>
+        <!-- 不同意票 -->
+        <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
+          <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
+          <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+            <span>不同意票</span>
+            <span>${data.disagree.toLocaleString()} (${disagreePct}%)</span>
           </div>
         </div>
 
-<div class="row" style=text-align:right>
+        <!-- 總投票數 -->
+        <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
+          <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
+          <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+            <span>總投票數</span>
+            <span>${total.toLocaleString()} (${turnoutPct}%)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style=text-align:right>
         <span style="font-size:11px; color:#666">投票權人</span>
         <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
       </div>
+    `);
 
-        
-      `);
+    displayTotalStats();
 
-      displayTotalStats();
-    });
+    // 停止事件冒泡，避免觸發 body click
+    event.stopPropagation();
+  });
+
+// ===== 點擊地圖以外的地方 =====
+d3.select("body").on("click", function() {
+  const panel = d3.select("#panel");
+  panel.html(`
+    <h2 style="font-size: 14px; margin-bottom: 8px;">全台票數統計</h2>
+    <div id="totalStats"></div>
+  `);
+  displayTotalStats();
+});
+
+// ===== 點擊 panel 本身不觸發 body click =====
+d3.select("#panel").on("click", function(event) {
+  event.stopPropagation();
+});
 
   // 核三廠位置
   const npp3 = projection([120.751667, 21.958056]);
@@ -531,7 +549,7 @@ function displayTotalStats() {
       <div style="position:absolute; left:${thresholdPct}%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
         同意門檻<br>${threshold.toLocaleString()}人
       </div>
-      <div style="position:absolute; left:100%; bottom:0; width:3px; height:20px; background:#F7931D;"></div>
+      <div style="position:absolute; left:98%; bottom:0; width:3px; height:20px; background:#F7931D;"></div>
       <div style="position:absolute; left:88%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
         總投票權人<br>20,002,091人
       </div>
@@ -574,6 +592,8 @@ function displayTotalStats() {
 displayTotalStats();
 </script>
   <script>
+    
+    
 document.addEventListener("DOMContentLoaded", () => {
   const tooltips = document.querySelectorAll(".tooltip");
 
