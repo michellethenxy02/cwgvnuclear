@@ -209,40 +209,15 @@
       }
       
       #map {
-          @media (max-width: 480px) {
-      .container {
-        display: flex;
-  justify-content: center;
-        padding: 12px;
-        text-align: center;
-        align-items: center;
-        
-      }
-      
-      .tooltip {
-      transform: translateY(-60px)  !important;
-        width:180px;
-        pointer-events: none;
-        
-       }
-      
-      #panel {
-        padding: 16px;
-        display:block;
-        margin: 0 auto 0 auto;
-        text-align: center;
-        align-items: center;
-         margin:  0 auto;
-      }
-      
-      #map {
-        width:92vw;
-       max-width:350px;
+        width:95vw;
+       max-width:400px;
         height: 400px;
         display:block;
-        margin: 0 auto;
-        
-        
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
       }
     }
