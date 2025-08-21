@@ -239,7 +239,8 @@
 </head>
 <body>
 <div class="container">
-  <h1>823「重啟核三」公投開票地圖（不斷更新）</h1>
+  
+  
   <br>
   <p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
   <div class="legend">
@@ -288,27 +289,27 @@ const path = d3.geoPath().projection(projection);
 
 const voteData = {
    "基隆市": { agree: 0, disagree: 0 },
-   "台北市": { agree: 930000, disagree: 80000 },
-   "新北市": { agree: 1450000, disagree: 1000 },
-   "桃園市": { agree: 65000, disagree: 600 },
-   "新竹市": { agree: 150000, disagree: 1400 },
-   "新竹縣": { agree: 210000, disagree: 1800 },
-   "苗栗縣": { agree: 220000, disagree: 2100 },
-   "台中市": { agree: 95000, disagree: 9200 },
-   "彰化縣": { agree: 43000, disagree: 4700 },
-   "南投縣": { agree: 17000, disagree: 1800 },
-   "雲林縣": { agree: 21000, disagree: 2400 },
-   "嘉義市": { agree: 130000, disagree: 1200 },
-   "嘉義縣": { agree: 18000, disagree: 2000 },
-   "台南市": { agree: 670000, disagree: 7200 },
-   "高雄市": { agree: 1000, disagree: 1150000 },
-   "屏東縣": { agree: 330000, disagree: 370000 },
-   "宜蘭縣": { agree: 20000, disagree: 2100 },
-   "花蓮縣": { agree: 15000, disagree: 160 },
-   "台東縣": { agree: 11000, disagree: 120000 },
-   "澎湖縣": { agree: 38000, disagree: 42000 },
-   "金門縣": { agree: 52000, disagree: 48000 },
-   "連江縣": { agree: 8000, disagree: 9000 }
+   "台北市": { agree: 0, disagree: 0 },
+   "新北市": { agree: 0, disagree:0 },
+   "桃園市": { agree: 0, disagree: 0 },
+   "新竹市": { agree: 0, disagree: 0 },
+   "新竹縣": { agree: 0, disagree: 0 },
+   "苗栗縣": { agree: 0, disagree: 0 },
+   "台中市": { agree: 0, disagree: 0 },
+   "彰化縣": { agree: 0, disagree: 0 },
+   "南投縣": { agree: 0, disagree: 0 },
+   "雲林縣": { agree: 0, disagree: 0 },
+   "嘉義市": { agree: 0, disagree: 0 },
+   "嘉義縣": { agree: 0, disagree: 0 },
+   "台南市": { agree: 0, disagree: 0 },
+   "高雄市": { agree: 0, disagree: 0 },
+   "屏東縣": { agree: 0, disagree: 0 },
+   "宜蘭縣": { agree: 0, disagree: 0 },
+   "花蓮縣": { agree: 0, disagree: 0 },
+   "台東縣": { agree: 0, disagree: 0 },
+   "澎湖縣": { agree: 0, disagree: 0 },
+   "金門縣": { agree: 0, disagree: 0 },
+   "連江縣": { agree: 0, disagree: 0 }
 };
   
   const populationData = {
@@ -351,6 +352,10 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       if(city === "桃園縣") city = "桃園市";  
       const data = voteData[city];
       if (!data) return "#ccc";
+    
+    if (data.agree === 0 && data.disagree === 0) {
+    return "#ccc"; // 沒有資料 → 灰色
+  }
       return data.agree > data.disagree ? "var(--agree)" : "var(--disagree)";
     })
     .on("mouseover", function(event, d) {
@@ -529,7 +534,7 @@ function displayTotalStats() {
   const stats = calculateTotalStats();
   const totalPopulation = 20002091;
   const threshold = 5000523;
-  const turnoutTotal=19000000;
+  const turnoutTotal=0;
 
   const votePct = (stats.total / totalPopulation * 100).toFixed(2);
   const agreePctOfTotal = (stats.totalAgree / totalPopulation * 100).toFixed(2);
