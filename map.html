@@ -183,29 +183,6 @@
 
     /* 更小屏幕優化 */
     @media (max-width: 480px) {
-     body {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-  }
-  
-  /* 觸摸事件 */
-  body:active .tooltip,
-  *:active ~ .tooltip {
-    opacity: 0 !important;
-    transition: opacity 0.1s ease;
-  }
-      
-      html:active .tooltip,
-  body:active .tooltip {
-    opacity: 0 !important;
-    transition: opacity 0.05s ease;
-  }
-  
-  /* 任何觸摸事件都隱藏 */
-  *:active .tooltip {
-    opacity: 0 !important;
-  }
-      
       .container {
         display: flex;
   justify-content: center;
@@ -216,7 +193,7 @@
       }
       
       .tooltip {
-      transform: translateY(-80px)  !important;
+      transform: translateY(-60px)  !important;
         width:180px;
         pointer-events: none;
         
