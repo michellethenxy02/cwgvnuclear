@@ -209,14 +209,41 @@
       }
       
       #map {
-        width:90vw;
-
+          @media (max-width: 480px) {
+      .container {
+        display: flex;
+  justify-content: center;
+        padding: 12px;
+        text-align: center;
+        align-items: center;
+        
+      }
+      
+      .tooltip {
+      transform: translateY(-60px)  !important;
+        width:180px;
+        pointer-events: none;
+        
+       }
+      
+      #panel {
+        padding: 16px;
+        display:block;
+        margin: 0 auto 0 auto;
+        text-align: center;
+        align-items: center;
+         margin:  0 auto;
+      }
+      
+      #map {
+        width:92vw;
+       max-width:350px;
         height: 400px;
         display:block;
-        margin: 0 auto;
+        margin: 0 3vw;
         
-        left: 3vw !important;            /* 強制左邊距至少5vw */
-        right: 3vw !important;
+        
+      }
       }
     }
 
