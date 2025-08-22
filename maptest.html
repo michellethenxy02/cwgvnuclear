@@ -433,6 +433,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       svg.selectAll('.region')
         .filter(p => p.properties.COUNTYNAME === city)
         .style('filter', 'brightness(2.0)')
+        .style('fill-opacity','0.5')
         .style('stroke', '#F7931D')
         .style('stroke-width', '2px');   
     })
@@ -677,6 +678,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
