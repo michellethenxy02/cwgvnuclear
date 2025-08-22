@@ -365,7 +365,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
   
   // ===== 為金門和連江縣創建隱形熱區 (Hitbox) =====
   const smallIslands = ["金門縣", "連江縣"];
-  const hitboxRadius = 30; // 熱區圓形的半徑，您可以根據需要調整大小
+  const hitboxRadius = 40; // 熱區圓形的半徑，您可以根據需要調整大小
 
   const islandFeatures = taiwan.features.filter(d => smallIslands.includes(d.properties.COUNTYNAME));
 
@@ -659,4 +659,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
