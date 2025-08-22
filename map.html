@@ -243,6 +243,8 @@
   
   <br>
   <p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
+  <br>
+  <br>
   <div class="legend">
   <div class="legend-item">
     <div class="legend-color" style="background: var(--agree);"></div>
@@ -386,6 +388,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
             <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree);"></div>
           </div>
 
+<!--
 
 <div class="row"  style="margin-top:8px; padding-top:8px; border-top:1px solid #eee;"><span class="pill total">總投票數</span><span>${total.toLocaleString()} (${turnoutPct}%)</span></div>
          
@@ -398,16 +401,16 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
         <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
       </div>
 
-
+-->
 
         </div>
       `)
-      .style("left", (event.pageX - 110) + "px")
-      .style("top", (event.pageY - 250) + "px");
+      .style("left", (event.pageX - 100) + "px")
+      .style("top", (event.pageY - 180) + "px");
     })
     .on("mousemove", function(event) {
-      tooltip.style("left", (event.pageX -110) + "px")
-             .style("top", (event.pageY - 250) + "px");
+      tooltip.style("left", (event.pageX -100) + "px")
+             .style("top", (event.pageY - 180) + "px");
     })
     .on("mouseout", function() {
       tooltip.transition().style("opacity", 0);
@@ -451,7 +454,7 @@ svg.selectAll(".region")
           </div>
         </div>
 
-        <!-- 總投票數 -->
+        <!-- 總投票數 
         <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
           <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
           <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
@@ -466,6 +469,7 @@ svg.selectAll(".region")
         <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
       </div>
     `);
+  -->
 
     displayTotalStats();
 
@@ -553,7 +557,7 @@ function displayTotalStats() {
       <div style="position:absolute; left:${thresholdPct}%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
         同意門檻<br>${threshold.toLocaleString()}人
       </div>
-      <div style="position:absolute; left:98%; bottom:0; width:3px; height:20px; background:#F7931D;"></div>
+      <div style="position:absolute; left:99%; bottom:0; width:3px; height:20px; background:#F7931D;"></div>
       <div style="position:absolute; left:88%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
         總投票權人<br>20,002,091人
       </div>
@@ -580,7 +584,7 @@ function displayTotalStats() {
 
   
 
-     <!-- 總投票數  -->
+     <!-- 總投票數  
           <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
             <div class="fill" style="width:${turnoutPctofTotal}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
             <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
@@ -588,7 +592,7 @@ function displayTotalStats() {
               <span>${turnoutTotal.toLocaleString()} (${turnoutPctofTotal}%)</span>
             </div>
           </div>
-
+-->
 
   `);
 }
