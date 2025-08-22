@@ -432,14 +432,30 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     // 手動觸發對應可見地圖區域的高亮效果
       svg.selectAll('.region')
         .filter(p => p.properties.COUNTYNAME === city)
-        .style('filter', 'brightness(1.3)') !important
-        .style('opacity','0.6') !important
+        .filter('brightness',1.3)
         .style('stroke', '#F7931D')
-        .style('stroke-width', '2px');  
+        .style('stroke-width', '2px');
     })
     .on("mousemove", function(event) {
-      tooltip.style("left", (event.pageX -100) + "px")
-             .style("top", (event.pageY - 180) + "px");
+    const tooltipNode = tooltip.node();
+      const tooltipWidth = tooltipNode.offsetWidth || 220; // 預設寬度
+      const tooltipHeight = tooltipNode.offsetHeight || 120;
+      const margin = 10;
+    
+    let left = event.pageX - tooltipWidth / 2;
+      let top = event.pageY - tooltipHeight - 20;
+    
+    if (left < margin) left = margin;
+      if (left + tooltipWidth > window.innerWidth - margin) {
+        left = window.innerWidth - tooltipWidth - margin;
+      }
+    
+     // 限制上方，必要時放下方
+      if (top < margin) top = event.pageY + 20;
+
+      tooltip.style("left", `${left}px`)
+             .style("top", `${top}px`);
+      
     })
     .on("mouseout", function() {
       tooltip.transition().duration(500).style("opacity", 0);
@@ -448,8 +464,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       svg.selectAll('.region')
         .style('filter', null)
         .style('stroke', null)
-        .style('stroke-width', null)
-        .style('opacity',null);
+        .style('stroke-width', null);
   
   
   })
@@ -660,7 +675,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
-
-
 
