@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>台灣地圖｜同意/不同意 互動統計</title>
-  <!-- D3 & TopoJSON CDN -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   <style>
@@ -23,6 +22,10 @@
       padding: 0;
       box-sizing: border-box;
       font-family: Arial, 'Microsoft JhengHei', '微軟正黑體', 'Noto Sans TC', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
     }
 
     .wrap { max-width: 1200px; margin: 24px auto; padding: 16px; }
@@ -45,7 +48,6 @@
       text-align: center;
     }
 
-    /* 修改：地圖容器佈局 - 改回相對定位 */
     .map-container {
       position: relative;
       display: block;
@@ -75,16 +77,15 @@
       stroke: #999;
       stroke-width: .6;
       vector-effect: non-scaling-stroke;
-      transition: all 0.3s ease;
+      transition: filter 0.3s ease; /* 修改: 過渡效果改為 filter */
     }
 
+    /* CSS 的 hover 效果仍然保留，但JS會覆蓋它 */
     .region:hover {
       filter: brightness(1.3);
       stroke-width: 2px;
       stroke: #FFA500;
     }
-
-    .region.selected { stroke-width: 1.5; stroke: var(--accent); }
 
     .tooltip { position: fixed; pointer-events: none; z-index: 50; }
     .tooltip .inner {
@@ -104,7 +105,6 @@
     .pill.disagree { background: rgba(151,102,102,.12); color: var(--disagree); border: 1px solid rgba(151,102,102,.32); }
     .pill.total { background: rgba(219,212,198,0.15); ; color:#8C846C; border: 1px solid rgba(219,212,198,0.90); }
     
-    /* 修改：Panel 樣式 - 改回右下角 */
     #panel {
       position: absolute;
       bottom: 20px;
@@ -115,34 +115,31 @@
       padding: 18px;
       box-shadow: 0 6px 12px rgba(0,0,0,.15);
       border: 1px solid #ddd;
-      
       font-size: 12px;
     }
 
-    /* 圖例樣式 */
-.legend {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 30px;
-  flex-wrap: wrap;
-}
+    .legend {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.legend-color {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  border: 1px solid rgba(0,0,0,0.1);
-}
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
     
-    /* 響應式設計：768px 以下時 panel 移到下方 */
     @media (max-width: 768px) {
       .container {
         display: flex;
@@ -162,7 +159,7 @@
         padding: 12px;
         text-align: center;
         display:block;
-        margin: 0 auto; /* 水平置中 + 上間距 */
+        margin: 20px auto 0 auto;
       }
       
       #map {
@@ -172,7 +169,7 @@
         margin: 0 auto;
         display:block;
         text-align:center;
-        transform: translateX(50px);
+        transform: translateX(0); /* RWD下不需要位移 */
       }
       
       h1 {
@@ -181,61 +178,32 @@
       }
     }
 
-    /* 更小屏幕優化 */
     @media (max-width: 480px) {
       .container {
-        display: flex;
-  justify-content: center;
         padding: 12px;
-        text-align: center;
-        align-items: center;
-        
       }
       
       .tooltip {
-      transform: translateY(-60px)  !important;
+        transform: translateY(-60px)  !important;
         width:180px;
         pointer-events: none;
-        
        }
       
-        #panel {
-  position: relative;   /* 不要用絕對定位 */
-  width: 100%;          /* 佔滿螢幕寬 */
-  max-width: 350px;     /* 限制最大寬度 */
-  margin: 16px auto 0;  /* 與 map 保持間距，並水平置中 */
-  padding: 16px;
-  box-sizing: border-box;
-  text-align: center;
-}
-        
-      
+      #panel {
+        padding: 16px;
+        margin: 20px auto 0 auto;
+      }
       
       #map {
         width:95vw;
-       max-width:400px;
+        max-width:400px;
         height: 400px;
-        display:block;
-        margin-left: auto;
-        margin-right: auto;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-      }
+        position: static;
+        transform: translateX(0);
       }
     }
 
     .stat-row { display:flex; justify-content:space-between; align-items: center; margin:8px 0; padding:4px; border-radius:6px; }
-    .stat-row.agree { background: rgba(109,127,151,.15);border-radius:6px; }
-    .stat-row.disagree { background: rgba(196,54,86,.08);border-radius:6px; }
-    .stat-label { font-weight:600; font-size:12px; }
-    .stat-value { font-size:12px; font-weight:700; }
-    .percentage { font-size:10px; color: var(--muted); margin-left:4px; }
-    .total-votes { text-align:center; font-size:12px; margin:10px 0; padding:8px; background:#f8f9fa; border-radius:6px; }
-    .big-bar { height:12px; background:#eee; border-radius:6px; margin:10px 0; overflow:hidden; position:relative; }
-    .big-bar .agree-fill { background: var(--agree); }
-    .big-bar .disagree-fill { background: var(--disagree); }
-    .big-bar .total{background: }
     .region-info { margin-top:16px; padding-top:10px; border-top:1px solid #eee; }
     .region-title { font-size:16px; font-weight:700; margin-bottom:8px; }
   </style>
@@ -243,23 +211,23 @@
 <body>
 <div class="container">
   
-  
+  <h1 style="font-size: 28px;">台灣地圖互動統計</h1>
   <br>
-  <p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
+  <p style="color:#666; font-size:20px;">點擊或滑過縣市以顯示資料</p> 
   <div class="legend">
-  <div class="legend-item">
-    <div class="legend-color" style="background: var(--agree);"></div>
-    <span>同意票居多</span>
+    <div class="legend-item">
+      <div class="legend-color" style="background: var(--agree);"></div>
+      <span>同意票居多</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: var(--disagree);"></div>
+      <span>不同意票居多</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #ccc;"></div>
+      <span>尚無資料</span>
+    </div>
   </div>
-  <div class="legend-item">
-    <div class="legend-color" style="background: var(--disagree);"></div>
-    <span>不同意票居多</span>
-  </div>
-  <div class="legend-item">
-    <div class="legend-color" style="background: #ccc;"></div>
-    <span>尚無資料</span>
-  </div>
-</div>
   
   <div class="map-container">
     <div class="map-wrapper">
@@ -270,8 +238,6 @@
       </div>
     </div>
   </div>
-  
-  
 
 </div>
 
@@ -279,7 +245,7 @@
 const width = 700, height = 600;
 const svg = d3.select("#map")
   .attr("width", "100%")
-  .attr("height", height)
+  .attr("height", "auto") // 讓高度自適應
   .attr("viewBox", `0 0 ${width} ${height}`)
   .attr("preserveAspectRatio", "xMidYMid meet");
 
@@ -290,53 +256,40 @@ const projection = d3.geoMercator()
 
 const path = d3.geoPath().projection(projection);
 
+// 範例資料，您可以替換成真實數據
 const voteData = {
    "基隆市": { agree: 0, disagree: 0 },
    "台北市": { agree: 0, disagree: 0 },
-   "新北市": { agree: 0, disagree:0 },
+   "新北市": { agree: 0, disagree: 0 },
    "桃園市": { agree: 0, disagree: 0 },
    "新竹市": { agree: 0, disagree: 0 },
-   "新竹縣": { agree: 0, disagree: 0 },
-   "苗栗縣": { agree: 0, disagree: 0 },
-   "台中市": { agree: 0, disagree: 0 },
-   "彰化縣": { agree: 0, disagree: 0 },
-   "南投縣": { agree: 0, disagree: 0 },
-   "雲林縣": { agree: 0, disagree: 0 },
-   "嘉義市": { agree: 0, disagree: 0 },
-   "嘉義縣": { agree: 0, disagree: 0 },
-   "台南市": { agree: 0, disagree: 0 },
-   "高雄市": { agree: 0, disagree: 0 },
-   "屏東縣": { agree: 0, disagree: 0 },
-   "宜蘭縣": { agree: 0, disagree: 0 },
-   "花蓮縣": { agree: 0, disagree: 0 },
-   "台東縣": { agree: 0, disagree: 0 },
-   "澎湖縣": { agree: 0, disagree: 0 },
-   "金門縣": { agree: 0, disagree: 0 },
-   "連江縣": { agree: 0, disagree: 0 }
+   "新竹縣": { agree: 147343, disagree: 110928 },
+   "苗栗縣": { agree: 141753, disagree: 116246 },
+   "台中市": { agree: 746933, disagree: 651664 },
+   "彰化縣": { agree: 283539, disagree: 247293 },
+   "南投縣": { agree: 122858, disagree: 104509 },
+   "雲林縣": { agree: 153327, disagree: 139155 },
+   "嘉義市": { agree: 63832, disagree: 58925 },
+   "嘉義縣": { agree: 127602, disagree: 112104 },
+   "台南市": { agree: 457855, disagree: 471928 },
+   "高雄市": { agree: 653928, disagree: 676839 },
+   "屏東縣": { agree: 198835, disagree: 190412 },
+   "宜蘭縣": { agree: 111559, disagree: 97410 },
+   "花蓮縣": { agree: 77953, disagree: 63233 },
+   "台東縣": { agree: 47938, disagree: 37626 },
+   "澎湖縣": { agree: 19803, disagree: 15830 },
+   "金門縣": { agree: 22894, disagree: 8189 },
+   "連江縣": { agree: 3045, disagree: 1133 }
 };
   
-  const populationData = {
-  "台北市": 2087808,
-  "新北市": 3501235,
-  "桃園市": 1971813,
-  "台中市": 2416540,
-  "台南市": 1600962,
-  "高雄市": 2358186,
-  "基隆市": 318691,
-  "新竹市": 370898,
-  "嘉義市": 221496,
-  "新竹縣": 488509,
-  "苗栗縣": 457783,
-  "彰化縣": 1042775,
-  "南投縣": 410405,
-  "雲林縣": 567994,
-  "嘉義縣": 424950,
-  "屏東縣": 688202,
-  "宜蘭縣": 388906,
-  "花蓮縣": 271519,
-  "台東縣": 181146,
-  "澎湖縣": 94412,
-  "金門縣": 125917,
+const populationData = {
+  "台北市": 2087808, "新北市": 3501235, "桃園市": 1971813,
+  "台中市": 2416540, "台南市": 1600962, "高雄市": 2358186,
+  "基隆市": 318691, "新竹市": 370898, "嘉義市": 221496,
+  "新竹縣": 488509, "苗栗縣": 457783, "彰化縣": 1042775,
+  "南投縣": 410405, "雲林縣": 567994, "嘉義縣": 424950,
+  "屏東縣": 688202, "宜蘭縣": 388906, "花蓮縣": 271519,
+  "台東縣": 181146, "澎湖縣": 94412, "金門縣": 125917,
   "連江縣": 11944
 };
 
@@ -345,7 +298,9 @@ const tooltip = d3.select("body").append("div")
   .style("opacity", 0);
 
 d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty2010.geo.json").then(function(taiwan) {
-  svg.selectAll("path")
+  
+  // 繪製主要的縣市地圖路徑
+  svg.selectAll(".region")
     .data(taiwan.features)
     .enter().append("path")
     .attr("d", path)
@@ -356,266 +311,240 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       const data = voteData[city];
       if (!data) return "#ccc";
     
-    if (data.agree === 0 && data.disagree === 0) {
-    return "#ccc"; // 沒有資料 → 灰色
-  }
+      if (data.agree === 0 && data.disagree === 0) {
+        return "#ccc"; // 沒有資料 → 灰色
+      }
       return data.agree > data.disagree ? "var(--agree)" : "var(--disagree)";
-    })
+    });
+
+  // ===== 為金門和連江縣創建隱形熱區 (Hitbox) =====
+  const smallIslands = ["金門縣", "連江縣"];
+  const hitboxRadius = 20; // 熱區圓形的半徑，您可以根據需要調整大小
+
+  const islandFeatures = taiwan.features.filter(d => smallIslands.includes(d.properties.COUNTYNAME));
+
+  svg.selectAll(".hitbox")
+    .data(islandFeatures)
+    .enter().append("circle")
+    .attr("class", "hitbox")
+    .attr("cx", d => path.centroid(d)[0]) // 計算縣市中心點的 x 坐標
+    .attr("cy", d => path.centroid(d)[1]) // 計算縣市中心點的 y 坐標
+    .attr("r", hitboxRadius)
+    .style("fill", "transparent") // 完全透明，使用者看不到
+    .style("cursor", "pointer");
+    
+  // ===== 將滑鼠事件綁定到所有 .region (可見地圖) 和 .hitbox (透明熱區) 上 =====
+  svg.selectAll(".region, .hitbox")
     .on("mouseover", function(event, d) {
       let city = d.properties.COUNTYNAME;
       if(city === "桃園縣") city = "桃園市";
       const data = voteData[city];
-       const population = populationData[city];
-  if (!data || !population) return;
+      const population = populationData[city];
+      if (!data || !population) return;
 
       const total = data.agree + data.disagree;
       const agreePct = (data.agree / population * 100).toFixed(2);
       const disagreePct = (data.disagree / population * 100).toFixed(2);
       const turnoutPct = (total / population * 100).toFixed(2);
 
-
-      tooltip.transition().style("opacity", 1);
-      tooltip.html(`
-        <div class="inner">
+      tooltip.transition().duration(200).style("opacity", 1);
+      tooltip.html(`<div class="inner">
           <h3>${city}</h3>
-          
           <div class="row"><span class="pill agree">同意</span><span>${data.agree.toLocaleString()} (${agreePct}%)</span></div>
           <div class="bar" style="height:12px; background:rgba(109,127,151,.15); border-radius:6px; overflow:hidden; margin-bottom:6px;">
             <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree);"></div>
           </div>
-
           <div class="row"><span class="pill disagree">不同意</span><span>${data.disagree.toLocaleString()} (${disagreePct}%)</span></div>
           <div class="bar" style="height:12px; background:rgba(196,54,86,.08); border-radius:6px; overflow:hidden;">
             <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree);"></div>
           </div>
-
-
-
-<div class="row"  style="margin-top:8px; padding-top:8px; border-top:1px solid #eee;"><span class="pill total">總投票數</span><span>${total.toLocaleString()} (${turnoutPct}%)</span></div>
-         
-<div class="bar" style="height:12px; background:rgba(219,212,198,0.30); border-radius:6px; overflow:hidden; margin-bottom:6px;">
+          <div class="row" style="margin-top:8px; padding-top:8px; border-top:1px solid #eee;"><span class="pill total">總投票數</span><span>${total.toLocaleString()} (${turnoutPct}%)</span></div>
+          <div class="bar" style="height:12px; background:rgba(219,212,198,0.30); border-radius:6px; overflow:hidden; margin-bottom:6px;">
             <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6"></div>
           </div>
+          <div class="row">
+            <span style="font-size:11px; color:#666;">投票權人</span>
+            <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
+          </div>
+        </div>`)
+        .style("left", (event.pageX + 15) + "px")
+        .style("top", (event.pageY - 28) + "px");
 
- <div class="row">
-        <span style="font-size:11px; color:#666;">投票權人</span>
-        <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
-      </div>
-
-
-
-        </div>
-      `)
-      .style("left", (event.pageX - 110) + "px")
-      .style("top", (event.pageY - 250) + "px");
+      // 手動觸發對應可見地圖區域的高亮效果
+      svg.selectAll('.region').filter(p => p.properties.COUNTYNAME === city)
+        .style('filter', 'brightness(1.3)')
+        .style('stroke', '#FFA500')
+        .style('stroke-width', '2px');
     })
     .on("mousemove", function(event) {
-      tooltip.style("left", (event.pageX -110) + "px")
-             .style("top", (event.pageY - 250) + "px");
+      tooltip.style("left", (event.pageX + 15) + "px")
+             .style("top", (event.pageY - 28) + "px");
     })
-    .on("mouseout", function() {
-      tooltip.transition().style("opacity", 0);
+    .on("mouseout", function(event, d) {
+      tooltip.transition().duration(500).style("opacity", 0);
+      
+      // 滑鼠移出時，取消所有高亮效果
+      svg.selectAll('.region')
+        .style('filter', null)
+        .style('stroke', null)
+        .style('stroke-width', null);
     })
-  // ===== 點擊地圖區域 =====
-svg.selectAll(".region")
-  .on("click", function(event, d) {
-    let city = d.properties.COUNTYNAME;
-    if(city === "桃園縣") city = "桃園市";
-    const data = voteData[city];
-    const population = populationData[city];
-    if (!data || !population) return;
+    .on("click", function(event, d) {
+      let city = d.properties.COUNTYNAME;
+      if(city === "桃園縣") city = "桃園市";
+      const data = voteData[city];
+      const population = populationData[city];
+      if (!data || !population) return;
 
-    const total = data.agree + data.disagree;
-    const agreePct = (data.agree / population * 100).toFixed(2);
-    const disagreePct = (data.disagree / population * 100).toFixed(2);
-    const turnoutPct = (total / population * 100).toFixed(2);
+      const total = data.agree + data.disagree;
+      const agreePct = total > 0 ? (data.agree / total * 100).toFixed(2) : 0;
+      const disagreePct = total > 0 ? (data.disagree / total * 100).toFixed(2) : 0;
+      const turnoutPct = (total / population * 100).toFixed(2);
+      
+      const panel = d3.select("#panel");
+      panel.html(`
+        <div class="region-info">
+          <h3 class="region-title">${city}</h3>
+          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
+            <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
+            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+              <span>同意票</span>
+              <span>${data.agree.toLocaleString()} (${agreePct}%)</span>
+            </div>
+          </div>
+          <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
+            <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
+            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+              <span>不同意票</span>
+              <span>${data.disagree.toLocaleString()} (${disagreePct}%)</span>
+            </div>
+          </div>
+          <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
+            <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
+            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+              <span>投票率</span>
+              <span>${turnoutPct}%</span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="justify-content: flex-end; gap: 5px;">
+          <span style="font-size:11px; color:#666">總投票數: ${total.toLocaleString()} / 投票權人: ${population.toLocaleString()}</span>
+        </div>
+      `);
+      event.stopPropagation();
+    });
 
-    const panel = d3.select("#panel");
-    panel.html(`
-      <h3>全台票數統計</h3>
+  d3.select("body").on("click", function() {
+    d3.select("#panel").html(`
+      <h2 style="font-size: 14px; margin-bottom: 8px;">全台票數統計</h2>
       <div id="totalStats"></div>
-      <div class="region-info">
-        <h3>${city}</h3>
-
-        <!-- 同意票 -->
-        <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
-          <div class="fill" style="width:${agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
-          <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-            <span>同意票</span>
-            <span>${data.agree.toLocaleString()} (${agreePct}%)</span>
-          </div>
-        </div>
-
-        <!-- 不同意票 -->
-        <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
-          <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;opacity: 0.6"></div>
-          <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-            <span>不同意票</span>
-            <span>${data.disagree.toLocaleString()} (${disagreePct}%)</span>
-          </div>
-        </div>
-
-        <!-- 總投票數 -->
-        <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
-          <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
-          <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-            <span>總投票數</span>
-            <span>${total.toLocaleString()} (${turnoutPct}%)</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" style=text-align:right>
-        <span style="font-size:11px; color:#666">投票權人</span>
-        <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
-      </div>
-    `);
-
+    `);  
     displayTotalStats();
-
-    // 停止事件冒泡，避免觸發 body click
-    event.stopPropagation();
   });
 
-// ===== 點擊地圖以外的地方 =====
-d3.select("body").on("click", function() {
-  const panel = d3.select("#panel");
-  panel.html(`
-    <h2 style="font-size: 14px; margin-bottom: 8px;">全台票數統計</h2>
-    <div id="totalStats"></div>
-  `);
-  displayTotalStats();
-});
+  d3.select("#panel").on("click", event => event.stopPropagation());
 
-// ===== 點擊 panel 本身不觸發 body click =====
-d3.select("#panel").on("click", function(event) {
-  event.stopPropagation();
-});
-
-  // 核三廠位置
+  // 核三廠位置標示
   const npp3 = projection([120.751667, 21.958056]);
-
-  // 加 emoji
-  svg.append("text")
-     .attr("x", npp3[0])
-     .attr("y", npp3[1] + 5)
-     .attr("text-anchor", "middle")
-     .attr("font-size", "30px")
-     .text("☢️");
-    
-  // 添加文字標籤
-  svg.append("text")
-      .attr("x", npp3[0] - 85)
-      .attr("y", npp3[1] + 3)
-      .attr("class", "marker-label")
-      .style("font-size", "20px")
-      .style("font-family", "微軟正黑體, sans-serif")
-      .style("font-weight", "bold") 
-      .style("fill", "#F7931D")
-      .text("核三廠");
+  if (npp3) { // 確保投影成功
+      svg.append("text")
+         .attr("x", npp3[0])
+         .attr("y", npp3[1] + 5)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "30px")
+         .style("cursor", "default")
+         .text("☢️");
+      
+      svg.append("text")
+          .attr("x", npp3[0] + 5)
+          .attr("y", npp3[1] + 3)
+          .attr("class", "marker-label")
+          .style("font-size", "14px")
+          .style("font-family", "微軟正黑體, sans-serif")
+          .style("font-weight", "bold") 
+          .style("fill", "#D9534F")
+          .style("pointer-events", "none")
+          .text("核三廠");
+  }
 });
 
 // ===== 全台統計函數 =====
 function calculateTotalStats() {
   let totalAgree = 0;
   let totalDisagree = 0;
+  let totalPopulation = 0;
 
-  Object.values(voteData).forEach(data => {
-    totalAgree += data.agree;
-    totalDisagree += data.disagree;
-  });
+  for (const city in voteData) {
+      totalAgree += voteData[city].agree;
+      totalDisagree += voteData[city].disagree;
+  }
+  for (const city in populationData) {
+    totalPopulation += populationData[city];
+  }
 
-  const total = totalAgree + totalDisagree;
-  const totalPopulation = 20002091;
-  const agreePct = (totalAgree / totalPopulation * 100).toFixed(2);
-  const disagreePct = (totalDisagree / totalPopulation * 100).toFixed(2);
-
-  return { totalAgree, totalDisagree, total, agreePct, disagreePct };
+  const totalVotes = totalAgree + totalDisagree;
+  const agreePct = totalVotes > 0 ? (totalAgree / totalVotes * 100).toFixed(2) : 0;
+  const disagreePct = totalVotes > 0 ? (totalDisagree / totalVotes * 100).toFixed(2) : 0;
+  
+  return { totalAgree, totalDisagree, totalVotes, totalPopulation, agreePct, disagreePct };
 }
 
 function displayTotalStats() {
   const stats = calculateTotalStats();
-  const totalPopulation = 20002091;
-  const threshold = 5000523;
-  const turnoutTotal=0;
-
-  const votePct = (stats.total / totalPopulation * 100).toFixed(2);
-  const agreePctOfTotal = (stats.totalAgree / totalPopulation * 100).toFixed(2);
-  const disagreePctOfTotal = (stats.totalDisagree / totalPopulation * 100).toFixed(2);
-  const turnoutPctofTotal= (turnoutTotal / totalPopulation *100).toFixed(2);
+  const turnoutTotal = stats.totalVotes;
+  const totalPopulation = stats.totalPopulation;
+  const threshold = totalPopulation / 4; // 假設同意門檻為投票權人1/4
+  
+  const agreePctOfTotalPop = (stats.totalAgree / totalPopulation * 100).toFixed(2);
+  const turnoutPctOfTotal = (turnoutTotal / totalPopulation * 100).toFixed(2);
   const thresholdPct = (threshold / totalPopulation * 100).toFixed(2);
 
-
-  d3.select("#totalStats").html(`
-    
- <div style="position: relative; margin:16px 0; padding-top:20px;">
+  d3.select("#totalStats").html(`    
+    <div style="position: relative; margin:16px 0; padding-top:20px;">
       <div class="big-bar" style="background:#eee; height:20px; border-radius:12px; position:relative;overflow: hidden">
-        <div style="position:absolute; top:0; left:0; height:20px; width:${agreePctOfTotal}%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.65"></div>
+        <div style="position:absolute; top:0; left:0; height:20px; width:${agreePctOfTotalPop}%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.65"></div>
         <div class="threshold" style="position:absolute; left:${thresholdPct}%; top:0; width:3px; height:100%; background: #F7931D;"></div>
-        
       </div>
       <div style="position:absolute; left:${thresholdPct}%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
-        同意門檻<br>${threshold.toLocaleString()}人
-      </div>
-      <div style="position:absolute; left:98%; bottom:0; width:3px; height:20px; background:#F7931D;"></div>
-      <div style="position:absolute; left:88%; top:-5px; transform:translateX(-50%); font-size:12px; font-weight:bold; color:#F7931D; white-space:nowrap; text-align:center;">
-        總投票權人<br>20,002,091人
+        同意門檻<br>${Math.floor(threshold).toLocaleString()}
       </div>
     </div>
-
-    <!-- 同意票 -->
-          <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${stats.agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>同意票</span>
-              <span>${stats.totalAgree.toLocaleString()} (${stats.agreePct}%)</span>
-            </div>
-          </div>
-
-          <!-- 不同意票 -->
-          <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${stats.disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;opacity: 0.6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>不同意票</span>
-              <span>${stats.totalDisagree.toLocaleString()} (${stats.disagreePct}%)</span>
-            </div>
-          </div>
-      
-
-  
-
-     <!-- 總投票數  -->
-          <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${turnoutPctofTotal}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
-            <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>總投票數</span>
-              <span>${turnoutTotal.toLocaleString()} (${turnoutPctofTotal}%)</span>
-            </div>
-          </div>
-
-
+    <div class="bar agree" style="height:40px; border-radius:12px; background: rgba(109,127,151,.15); position: relative; margin:8px 0;overflow:hidden;">
+      <div class="fill" style="width:${stats.agreePct}%; height:100%; background: var(--agree); border-radius:12px 0 0 12px;opacity: 0.6;"></div>
+      <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+        <span>同意票</span>
+        <span>${stats.totalAgree.toLocaleString()} (${stats.agreePct}%)</span>
+      </div>
+    </div>
+    <div class="bar disagree" style="height:40px; border-radius:12px; background: rgba(196,54,86,.08); position: relative; margin:8px 0;overflow:hidden;">
+      <div class="fill" style="width:${stats.disagreePct}%; height:100%; background: var(--disagree); border-radius:12px 0 0 12px;opacity: 0.6;"></div>
+      <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+        <span>不同意票</span>
+        <span>${stats.totalDisagree.toLocaleString()} (${stats.disagreePct}%)</span>
+      </div>
+    </div>
+    <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
+      <div class="fill" style="width:${turnoutPctOfTotal}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
+      <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
+        <span>投票率</span>
+        <span>${turnoutPctOfTotal}%</span>
+      </div>
+    </div>
+    <div class="row" style="justify-content: flex-end; gap: 5px;">
+        <span style="font-size:11px; color:#666">總投票權人: ${totalPopulation.toLocaleString()}</span>
+    </div>
   `);
 }
 
+// 初始載入時顯示全台統計
 displayTotalStats();
-</script>
-  <script>
-    
-    
+
+// 處理手機滑動時隱藏 tooltip 的腳本
 document.addEventListener("DOMContentLoaded", () => {
-  const tooltips = document.querySelectorAll(".tooltip");
-
-  function hideTooltips() {
-    tooltips.forEach(t => {
-      t.style.opacity = "0";
-    });
-  }
-
-  // 只在手機/平板啟用
-  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    document.addEventListener("touchmove", hideTooltips, { passive: true });
-    document.addEventListener("touchstart", hideTooltips, { passive: true });
-    document.addEventListener("scroll", hideTooltips, { passive: true });
+  if ('ontouchstart' in window) { // 判斷是否為觸控設備
+    document.addEventListener("touchmove", () => {
+      d3.select(".tooltip").style("opacity", 0);
+    }, { passive: true });
   }
 });
 </script>
