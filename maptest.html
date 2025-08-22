@@ -243,6 +243,8 @@
   
   <br>
   <p style="color:#666; font-size:20px;">點擊縣市顯示資料</p> 
+  <br>
+  <br>
   <div class="legend">
   <div class="legend-item">
     <div class="legend-color" style="background: var(--agree);"></div>
@@ -255,7 +257,6 @@
   <div class="legend-item">
     <div class="legend-color" style="background: #ccc;"></div>
     <span>尚無資料</span>
-    <br><br><br><br><br>
   </div>
 </div>
   
@@ -291,7 +292,7 @@ const path = d3.geoPath().projection(projection);
 const voteData = {
    "基隆市": { agree: 0, disagree: 0 },
    "台北市": { agree: 0, disagree: 0 },
-   "新北市": { agree: 0, disagree: 0 },
+   "新北市": { agree: 0, disagree:0 },
    "桃園市": { agree: 0, disagree: 0 },
    "新竹市": { agree: 0, disagree: 0 },
    "新竹縣": { agree: 0, disagree: 0 },
@@ -343,7 +344,9 @@ const tooltip = d3.select("body").append("div")
   .style("opacity", 0);
 
 d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty2010.geo.json").then(function(taiwan) {
-  svg.selectAll("path")
+  
+// 繪製主要的縣市地圖路徑
+  svg.selectAll(".region")
     .data(taiwan.features)
     .enter().append("path")
     .attr("d", path)
@@ -360,9 +363,9 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       return data.agree > data.disagree ? "var(--agree)" : "var(--disagree)";
     })
   
-    // ===== 為金門和連江縣創建隱形熱區 (Hitbox) =====
-  const smallIslands = ["金門縣", "連江縣","澎湖縣"];
-  const hitboxRadius = 40; // 熱區圓形的半徑，您可以根據需要調整大小
+  // ===== 為金門和連江縣創建隱形熱區 (Hitbox) =====
+  const smallIslands = ["金門縣", "連江縣"];
+  const hitboxRadius = 20; // 熱區圓形的半徑，您可以根據需要調整大小
 
   const islandFeatures = taiwan.features.filter(d => smallIslands.includes(d.properties.COUNTYNAME));
 
@@ -378,6 +381,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     
   // ===== 將滑鼠事件綁定到所有 .region (可見地圖) 和 .hitbox (透明熱區) 上 =====
   svg.selectAll(".region, .hitbox")
+  
     .on("mouseover", function(event, d) {
       let city = d.properties.COUNTYNAME;
       if(city === "桃園縣") city = "桃園市";
@@ -406,8 +410,8 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
             <div class="fill" style="width:${disagreePct}%; height:100%; background: var(--disagree);"></div>
           </div>
 
+<!--
 
-<!-- 總投票數hide 
 <div class="row"  style="margin-top:8px; padding-top:8px; border-top:1px solid #eee;"><span class="pill total">總投票數</span><span>${total.toLocaleString()} (${turnoutPct}%)</span></div>
          
 <div class="bar" style="height:12px; background:rgba(219,212,198,0.30); border-radius:6px; overflow:hidden; margin-bottom:6px;">
@@ -421,43 +425,35 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
 
 -->
 
-        </div>
-      `);
+        </div>`)
+      .style("left", (event.pageX - 100) + "px")
+      .style("top", (event.pageY - 180) + "px");
     
-      // 取得螢幕寬高
-  const tooltipWidth = 220;   // 跟 .tooltip .inner min-width 一致
-  const tooltipHeight = 150;  // 大約高度，視實際內容調整
-  const padding = 10;         // 保留邊距
-
-  let x = event.pageX - tooltipWidth / 2;
-  let y = event.pageY - tooltipHeight - 20;
-
-  // 左右邊界限制
-  if (x < padding) x = padding;
-  if (x + tooltipWidth > window.innerWidth - padding) {
-    x = window.innerWidth - tooltipWidth - padding;
-  }
-
-  // 上下邊界限制
-  if (y < padding) y = event.pageY + 20; // 如果上面放不下就放下面
-
-  tooltip.style("left", x + "px").style("top", y + "px");
-})
+    // 手動觸發對應可見地圖區域的高亮效果
+      svg.selectAll('.region').filter(p => p.properties.COUNTYNAME === city)
+        .style('filter', 'brightness(1.3)')
+        .style('stroke', '#FFA500')
+        .style('stroke-width', '2px');
     
-  
-  
-  
-  
-  
+    
+    })
     .on("mousemove", function(event) {
-      tooltip.style("left", (event.pageX -110) + "px")
-             .style("top", (event.pageY - 150) + "px");
+      tooltip.style("left", (event.pageX -100) + "px")
+             .style("top", (event.pageY - 180) + "px");
     })
     .on("mouseout", function() {
-      tooltip.transition().style("opacity", 0);
-    })
+      tooltip.transition().duration(500).style("opacity", 0);
+   
+  // 滑鼠移出時，取消所有高亮效果
+      svg.selectAll('.region')
+        .style('filter', null)
+        .style('stroke', null)
+        .style('stroke-width', null);
+  
+  
+  })
   // ===== 點擊地圖區域 =====
-svg.selectAll(".region")
+ 
   .on("click", function(event, d) {
     let city = d.properties.COUNTYNAME;
     if(city === "桃園縣") city = "桃園市";
@@ -495,7 +491,7 @@ svg.selectAll(".region")
           </div>
         </div>
 
-        <!-- 總投票數  
+        <!-- 總投票數 
         <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
           <div class="fill" style="width:${turnoutPct}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
           <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
@@ -504,14 +500,14 @@ svg.selectAll(".region")
           </div>
         </div>
       </div>
-       
+
       <div class="row" style=text-align:right>
         <span style="font-size:11px; color:#666">投票權人</span>
         <span style="font-size:11px; color:#666;">${population.toLocaleString()}</span>
       </div>
-        -->
     `);
-      
+  -->
+
     displayTotalStats();
 
     // 停止事件冒泡，避免觸發 body click
@@ -633,7 +629,7 @@ function displayTotalStats() {
               <span>${turnoutTotal.toLocaleString()} (${turnoutPctofTotal}%)</span>
             </div>
           </div>
-    -->
+-->
 
   `);
 }
