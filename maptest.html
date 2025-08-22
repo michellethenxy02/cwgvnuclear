@@ -81,7 +81,7 @@
     .region:hover {
       filter: brightness(1.3);
       stroke-width: 2px;
-      stroke: #FFA500;
+      stroke: #F7931D;
     }
 
     .region.selected { stroke-width: 1.5; stroke: var(--accent); }
@@ -365,7 +365,7 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
   
   // ===== 為金門和連江縣創建隱形熱區 (Hitbox) =====
   const smallIslands = ["金門縣", "連江縣"];
-  const hitboxRadius = 20; // 熱區圓形的半徑，您可以根據需要調整大小
+  const hitboxRadius = 40; // 熱區圓形的半徑，您可以根據需要調整大小
 
   const islandFeatures = taiwan.features.filter(d => smallIslands.includes(d.properties.COUNTYNAME));
 
@@ -430,10 +430,12 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
       .style("top", (event.pageY - 180) + "px");
     
     // 手動觸發對應可見地圖區域的高亮效果
-      svg.selectAll('.region').filter(p => p.properties.COUNTYNAME === city)
-        .style('filter', 'brightness(1.3)')
-        .style('stroke', '#FFA500')
+      svg.selectAll('.region')
+        .filter(p => p.properties.COUNTYNAME === city)
+        .style('fill-opacity', 0.8)
+        .style('stroke', '#F7931D')
         .style('stroke-width', '2px');
+        
     
     
     })
@@ -659,3 +661,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
