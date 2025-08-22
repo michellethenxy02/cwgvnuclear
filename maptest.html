@@ -432,8 +432,8 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     // 手動觸發對應可見地圖區域的高亮效果
       svg.selectAll('.region')
         .filter(p => p.properties.COUNTYNAME === city)
-        .style('filter', 'brightness(1.3)')
-        .style('opacity','0.6')
+        .style('filter', 'brightness(1.3)') !important
+        .style('opacity','0.6') !important
         .style('stroke', '#F7931D')
         .style('stroke-width', '2px');  
     })
@@ -660,6 +660,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
