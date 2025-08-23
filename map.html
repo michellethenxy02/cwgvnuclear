@@ -389,8 +389,8 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
   if (!data || !population) return;
 
       const total = data.agree + data.disagree;
-      const agreePct = (data.agree / population * 100).toFixed(2);
-      const disagreePct = (data.disagree / population * 100).toFixed(2);
+      const agreePct = (data.agree / total * 100).toFixed(2);
+      const disagreePct = (data.disagree / total * 100).toFixed(2);
       const turnoutPct = (total / population * 100).toFixed(2);
 
 
@@ -581,8 +581,8 @@ function calculateTotalStats() {
 
   const total = totalAgree + totalDisagree;
   const totalPopulation = 20002091;
-  const agreePct = (totalAgree / totalPopulation * 100).toFixed(2);
-  const disagreePct = (totalDisagree / totalPopulation * 100).toFixed(2);
+  const agreePct = (totalAgree / total * 100).toFixed(2);
+  const disagreePct = (totalDisagree / total * 100).toFixed(2);
 
   return { totalAgree, totalDisagree, total, agreePct, disagreePct };
 }
