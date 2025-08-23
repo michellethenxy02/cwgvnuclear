@@ -289,26 +289,26 @@ const projection = d3.geoMercator()
 const path = d3.geoPath().projection(projection);
 
 const voteData = {
-   "基隆市": { agree: 307, disagree: 167},
-   "台北市": { agree: 687, disagree: 265 },
-   "新北市": { agree: 345, disagree:397 },
-   "桃園市": { agree: 768, disagree: 617},
-   "新竹市": { agree: 65, disagree: 52 },
-   "新竹縣": { agree: 63, disagree: 51 },
-   "苗栗縣": { agree: 71, disagree: 62},
-   "台中市": { agree: 72, disagree: 61 },
-   "彰化縣": { agree: 40, disagree: 25 },
+   "基隆市": { agree: 7137, disagree: 2056},
+   "台北市": { agree: 2986, disagree: 1232 },
+   "新北市": { agree: 2102, disagree:651 },
+   "桃園市": { agree: 12607, disagree: 3403},
+   "新竹市": { agree: 474, disagree: 101 },
+   "新竹縣": { agree: 555, disagree: 84 },
+   "苗栗縣": { agree: 2848, disagree: 421},
+   "台中市": { agree: 1862, disagree: 651 },
+   "彰化縣": { agree: 5722, disagree: 1612 },
    "南投縣": { agree: 35, disagree: 28 },
-   "雲林縣": { agree: 71, disagree: 42 },
-   "嘉義市": { agree: 24, disagree: 23 },
+   "雲林縣": { agree: 7743, disagree: 2660 },
+   "嘉義市": { agree: 4273, disagree: 1592 },
    "嘉義縣": { agree: 209, disagree: 72 },
-   "台南市": { agree: 115, disagree: 67 },
-   "高雄市": { agree: 127, disagree: 59 },
-   "屏東縣": { agree: 51, disagree: 41 },
-   "宜蘭縣": { agree: 318, disagree: 85 },
-   "花蓮縣": { agree: 95, disagree: 63 },
-   "台東縣": { agree: 121, disagree: 56 },
-   "澎湖縣": { agree: 192, disagree: 83 },
+   "台南市": { agree: 6627, disagree: 3705 },
+   "高雄市": { agree: 8188, disagree: 4609 },
+   "屏東縣": { agree: 1241, disagree: 820 },
+   "宜蘭縣": { agree: 3628, disagree: 1241 },
+   "花蓮縣": { agree: 4186, disagree: 592 },
+   "台東縣": { agree: 2611, disagree: 393 },
+   "澎湖縣": { agree: 1062, disagree: 325 },
    "金門縣": { agree: 1494, disagree: 100},
    "連江縣": { agree: 73, disagree: 35 }
 };
@@ -479,8 +479,8 @@ d3.json("https://raw.githubusercontent.com/g0v/twgeojson/master/json/twCounty201
     if (!data || !population) return;
 
     const total = data.agree + data.disagree;
-    const agreePct = (data.agree / population * 100).toFixed(2);
-    const disagreePct = (data.disagree / population * 100).toFixed(2);
+    const agreePct = (data.agree / total * 100).toFixed(2);
+    const disagreePct = (data.disagree / total * 100).toFixed(2);
     const turnoutPct = (total / population * 100).toFixed(2);
 
     const panel = d3.select("#panel");
