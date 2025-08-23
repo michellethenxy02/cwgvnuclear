@@ -189,6 +189,7 @@
         padding: 12px;
         text-align: center;
         align-items: center;
+        height:600px;
         
       }
       
@@ -289,28 +290,28 @@ const projection = d3.geoMercator()
 const path = d3.geoPath().projection(projection);
 
 const voteData = {
-   "基隆市": { agree: 7137, disagree: 2056},
-   "台北市": { agree: 2986, disagree: 1232 },
-   "新北市": { agree: 2102, disagree:651 },
-   "桃園市": { agree: 12607, disagree: 3403},
-   "新竹市": { agree: 474, disagree: 101 },
-   "新竹縣": { agree: 555, disagree: 84 },
-   "苗栗縣": { agree: 2848, disagree: 421},
-   "台中市": { agree: 1862, disagree: 651 },
-   "彰化縣": { agree: 5722, disagree: 1612 },
-   "南投縣": { agree: 35, disagree: 28 },
-   "雲林縣": { agree: 7743, disagree: 2660 },
-   "嘉義市": { agree: 4273, disagree: 1592 },
-   "嘉義縣": { agree: 209, disagree: 72 },
-   "台南市": { agree: 6627, disagree: 3705 },
-   "高雄市": { agree: 8188, disagree: 4609 },
-   "屏東縣": { agree: 1241, disagree: 820 },
-   "宜蘭縣": { agree: 3628, disagree: 1241 },
-   "花蓮縣": { agree: 4186, disagree: 592 },
-   "台東縣": { agree: 2611, disagree: 393 },
-   "澎湖縣": { agree: 1062, disagree: 325 },
-   "金門縣": { agree: 1494, disagree: 100},
-   "連江縣": { agree: 73, disagree: 35 }
+   "基隆市": { agree: 33735, disagree: 8734},
+   "台北市": { agree: 106779, disagree: 35701 },
+   "新北市": { agree: 64020, disagree:22294 },
+   "桃園市": { agree: 130948, disagree: 32321},
+   "新竹市": { agree: 9106, disagree: 2342 },
+   "新竹縣": { agree: 10183, disagree: 1755 },
+   "苗栗縣": { agree: 33874, disagree: 5801},
+   "台中市": { agree: 63551, disagree: 18150 },
+   "彰化縣": { agree: 76896, disagree: 19411},
+   "南投縣": { agree: 1134, disagree: 406 },
+   "雲林縣": { agree: 57816, disagree: 17797 },
+   "嘉義市": { agree: 11702, disagree: 5317 },
+   "嘉義縣": { agree: 31913, disagree: 12493 },
+   "台南市": { agree: 79887, disagree: 42267 },
+   "高雄市": { agree: 112738, disagree: 66159 },
+   "屏東縣": { agree: 37139, disagree: 30995 },
+   "宜蘭縣": { agree: 24905, disagree: 10367 },
+   "花蓮縣": { agree: 37102, disagree: 5880 },
+   "台東縣": { agree: 16275, disagree: 3108 },
+   "澎湖縣": { agree: 7847, disagree: 2457 },
+   "金門縣": { agree: 13787, disagree: 846},
+   "連江縣": { agree: 218, disagree: 8 }
 };
   
   const populationData = {
