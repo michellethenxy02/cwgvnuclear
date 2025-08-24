@@ -278,7 +278,7 @@ const svg = d3.select("#map")
 
 const projection = d3.geoMercator()
   .center([121, 24])
-  .scale(1000)
+  .scale(6500)
   .translate([width / 2, height / 2]);
 
 const path = d3.geoPath().projection(projection);
@@ -631,15 +631,15 @@ function displayTotalStats() {
 
   
 
-     <!-- 總投票數  
+     <!-- 總投票數  -->
           <div class="bar total" style="height:40px; border-radius:12px; background:rgba(219,212,198,0.30); position: relative; margin:8px 0;overflow:hidden;">
-            <div class="fill" style="width:${turnoutPctofTotal}%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
+            <div class="fill" style="width:29.53%; height:100%; background: #DBD4C6; border-radius:12px 0 0 12px;opacity: 0.8"></div>
             <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; padding:0 12px; color: black; font-weight:bold;">
-              <span>總投票數</span>
-              <span>${turnoutTotal.toLocaleString()} (${turnoutPctofTotal}%)</span>
+              <span>總投票數(投票率)</span>
+              <span>5,906,370 (29.53%)</span>
             </div>
           </div>
--->
+
 
   `);
 }
